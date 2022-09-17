@@ -4,6 +4,7 @@ import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import Overworld from '../components/Overworld.js';
 import GameObject from '../components/GameObject.js';
+import Maps from '../components/Maps.js'
 
 const Home: NextPage = () => {
   useEffect(() => {
@@ -11,23 +12,7 @@ const Home: NextPage = () => {
   }, [])
   
   function init() {
-    window.OverworldMaps = {
-      DemoRoom: {
-        lowerSrc: "/images/maps/main/Main.gif",
-        upperSrc: "/images/maps/main/Main.gif",
-        gameObjects: {
-          hero: new GameObject({
-            x: 5,
-            y: 6,
-          }),
-          npc1: new GameObject({
-            x: 7,
-            y: 9,
-            src: "/images/characters/player/mPlayer_[human].png",
-          }),
-        },
-      },
-    };
+    Maps()
     const overworld = new Overworld({
       element: document.querySelector(".game-container"),
     });
