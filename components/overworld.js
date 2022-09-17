@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import GameObject from "../components/GameObject.js";
+import OverworldMap from "../components/OverworldMap.js";
 
 class Overworld extends Component {
   constructor(props) {
@@ -7,56 +8,34 @@ class Overworld extends Component {
     this.element = props.element;
     this.canvas = props.element.querySelector(".game-canvas");
     this.ctx = props.element.querySelector("canvas").getContext("2d");
+    this.map = null;
   }
   init() {
-    const image = new Image();
-    image.onload = () => {
-      this.ctx.drawImage(image, 0, 0);
+    this.map = new OverworldMap(window.OverworldMaps.DemoRoom);
+    this.startGameLoop();
+  }
+  startGameLoop() {
+    const step = () => {
+      //Clear off the canvas
+      this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+      //Draw Lower layer
+      this.map.drawLowerImage(this.ctx);
+
+      //Draw Game Objects
+      Object.values(this.map.gameObjects).forEach((object) => {
+        object.x += 0.02;
+        object.sprite.draw(this.ctx);
+      });
+
+      //Draw Upper layer
+      this.map.drawUpperImage(this.ctx);
+
+      requestAnimationFrame(() => {
+        step();
+      });
     };
-    image.src = "/images/maps/main/Main.gif";
-
-    //Place some Game Objects!
-    const player = new GameObject({
-      x: 6,
-      y: 5,
-    });
-
-    setTimeout(() => {
-      player.sprite.draw(this.ctx);
-    }, 200);
-
-    // const x = 6;
-    // const y = 6;
-    // const shadow = new Image();
-    // shadow.onload = () => {
-    //   this.ctx.drawImage(
-    //     shadow,
-    //     0, //left cut
-    //     0, //top cut,
-    //     32, //width of cut
-    //     32, //height of cut
-    //     x * 16 - 8,
-    //     y * 16 - 18,
-    //     32,
-    //     32
-    //   );
-    // };
-    // shadow.src = "/images/characters/shadow.png";
-    // const player = new Image();
-    // player.onload = () => {
-    //   this.ctx.drawImage(
-    //     player,
-    //     0, //left cut
-    //     0, //top cut,
-    //     32, //width of cut
-    //     32, //height of cut
-    //     x * 16 - 8,
-    //     y * 16 - 18,
-    //     32,
-    //     32
-    //   );
-    // };
-    // player.src = "/images/characters/player/mPlayer_[human].png";
+    step();
   }
 }
 

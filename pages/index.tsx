@@ -3,20 +3,36 @@ import Head from 'next/head'
 import Image from 'next/image'
 import { useEffect, useState } from 'react'
 import Overworld from '../components/Overworld.js';
+import GameObject from '../components/GameObject.js';
 
 const Home: NextPage = () => {
-  const [loadingState, setLoadingState] = useState('not-loaded')
   useEffect(() => {
     init()
   }, [])
   
   function init() {
+    window.OverworldMaps = {
+      DemoRoom: {
+        lowerSrc: "/images/maps/main/Main.gif",
+        upperSrc: "/images/maps/main/Main.gif",
+        gameObjects: {
+          hero: new GameObject({
+            x: 5,
+            y: 6,
+          }),
+          npc1: new GameObject({
+            x: 7,
+            y: 9,
+            src: "/images/characters/player/mPlayer_[human].png",
+          }),
+        },
+      },
+    };
     const overworld = new Overworld({
       element: document.querySelector(".game-container"),
     });
     overworld.init();
   };
-  
 
   return (
     <div className="">
@@ -33,5 +49,4 @@ const Home: NextPage = () => {
     </div>
   )
 }
-
 export default Home
