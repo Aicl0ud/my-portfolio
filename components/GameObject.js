@@ -10,6 +10,7 @@ class GameObject extends Component {
       src: config.src || "/images/characters/player/mPlayer_[human].png",
     });
   }
+  update() {}
 }
 
 export default GameObject;

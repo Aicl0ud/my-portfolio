@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import GameObject from "../components/GameObject.js";
 import OverworldMap from "../components/OverworldMap.js";
+import DirectionInput from "../components/DirectionInput.js";
 
 class Overworld extends Component {
   constructor(props) {
@@ -12,7 +13,11 @@ class Overworld extends Component {
   }
   init() {
     this.map = new OverworldMap(window.OverworldMaps.DemoRoom);
+    this.directionInput = new DirectionInput();
+    this.directionInput.init();
     this.startGameLoop();
+    //Draw Lower layer
+    this.map.drawLowerImage(this.ctx);
   }
   startGameLoop() {
     const step = () => {
@@ -24,7 +29,9 @@ class Overworld extends Component {
 
       //Draw Game Objects
       Object.values(this.map.gameObjects).forEach((object) => {
-        object.x += 0.02;
+        object.update({
+          arrow: this.directionInput.direction,
+        });
         object.sprite.draw(this.ctx);
       });
 
