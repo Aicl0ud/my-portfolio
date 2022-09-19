@@ -23,21 +23,21 @@ class Sprite extends Component {
 
     //Configure Animation & Initial State
     this.animations = config.animations || {
-      "idle-down": [[0, 0]],
+      // "idle-down": [[0, 0]],
       "idle-right": [
         [0, 1],
         [1, 1],
         [2, 1],
         [3, 1],
       ],
-      "idle-up": [[0, 2]],
+      // "idle-up": [[0, 2]],
       "idle-left": [
         [4, 1],
         [5, 1],
         [6, 1],
         [7, 1],
       ],
-      "walk-down": [[0, 0]],
+      // "walk-down": [[0, 0]],
       "walk-right": [
         [0, 2],
         [1, 2],
@@ -48,7 +48,7 @@ class Sprite extends Component {
         [2, 3],
         [3, 3],
       ],
-      "walk-up": [[0, 0]],
+      // "walk-up": [[0, 0]],
       "walk-left": [
         [4, 2],
         [5, 2],
@@ -60,7 +60,7 @@ class Sprite extends Component {
         [7, 3],
       ],
     };
-    this.currentAnimation = "idle-right"; // config.currentAnimation || "idle-down";
+    this.currentAnimation = config.currentAnimation || "idle-right";
     this.currentAnimationFrame = 0;
 
     this.animationFrameLimit = config.animationFrameLimit || 8;
@@ -78,17 +78,15 @@ class Sprite extends Component {
   setAnimation(key) {
     // console.log(key);
     if (this.currentAnimation !== key) {
-      if (key.includes("up")) {
-        key = key.replace("up", this.currentAnimation.split("-")[1]);
-        console.log(key);
-      } else if (key.includes("down")) {
-        key = key.replace("down", this.currentAnimation.split("-")[1]);
-        console.log(key);
-      } else {
-        this.currentAnimation = key;
+      if (key.includes("up") || key.includes("down")) {
+        this.currentAnimation = this.currentAnimation;
         this.currentAnimationFrame = 0;
         this.animationFrameProgress = this.animationFrameLimit;
+        return;
       }
+      this.currentAnimation = key;
+      this.currentAnimationFrame = 0;
+      this.animationFrameProgress = this.animationFrameLimit;
     }
   }
 

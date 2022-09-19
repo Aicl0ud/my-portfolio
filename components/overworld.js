@@ -27,6 +27,7 @@ class Overworld extends Component {
 
       //Establish the camera person
       const cameraPerson = this.map.gameObjects.player;
+      // console.log(cameraPerson);
 
       //Update all objects
       Object.values(this.map.gameObjects).forEach((object) => {

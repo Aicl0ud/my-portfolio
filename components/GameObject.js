@@ -13,7 +13,7 @@ class GameObject extends Component {
   }
 
   mount(map) {
-    console.log("mounting!");
+    // console.log("mounting!");
     this.mounted = true;
     map.addWall(this.x, this.y);
   }
