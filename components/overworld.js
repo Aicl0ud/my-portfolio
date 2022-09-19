@@ -13,8 +13,11 @@ class Overworld extends Component {
   }
   init() {
     this.map = new OverworldMap(window.OverworldMaps.DemoRoom);
+    this.map.mountObjects();
+
     this.directionInput = new DirectionInput();
     this.directionInput.init();
+
     this.startGameLoop();
   }
   startGameLoop() {
@@ -29,6 +32,7 @@ class Overworld extends Component {
       Object.values(this.map.gameObjects).forEach((object) => {
         object.update({
           arrow: this.directionInput.direction,
+          map: this.map,
         });
       });
 

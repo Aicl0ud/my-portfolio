@@ -111,6 +111,10 @@ class Sprite extends Component {
   draw(ctx, cameraPerson) {
     const x = this.gameObject.x - 8 + utils.withGrid(10.5) - cameraPerson.x;
     const y = this.gameObject.y - 18 + utils.withGrid(6) - cameraPerson.y;
+    //For debug position
+    document.querySelector("#position").textContent = `${parseInt(
+      cameraPerson.x / 16
+    )}, ${parseInt(cameraPerson.y / 16)}`;
 
     this.isShadowLoaded && ctx.drawImage(this.shadow, x, y);
 
