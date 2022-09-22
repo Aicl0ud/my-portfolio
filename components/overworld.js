@@ -12,7 +12,7 @@ class Overworld extends Component {
     this.map = null;
   }
   init() {
-    this.map = new OverworldMap(window.OverworldMaps.DemoRoom);
+    this.map = new OverworldMap(window.OverworldMaps.Main);
     this.map.mountObjects();
 
     this.directionInput = new DirectionInput();

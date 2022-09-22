@@ -28,7 +28,7 @@ const Home: NextPage = () => {
 
       <main className="">
         <div className='game-container relative'>
-          <canvas className='game-canvas bg-[#5C699F]' width={"352"} height={"198"}></canvas>
+          <canvas className='game-canvas bg-[#353540]' width={"352"} height={"198"}></canvas>
           <div id="position" className='absolute bottom-0 right-0 mr-1 text-white'>(x,y)</div>
         </div>
       </main>
