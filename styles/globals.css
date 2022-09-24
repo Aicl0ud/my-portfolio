@@ -1,12 +1,19 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+/* @import url('/fonts/nokiafc22.ttf'); */
+@font-face{
+  font-family: nokiafc22;
+  src: url(/fonts/nokiafc22.ttf);
+}
 
 * {
+  
   box-sizing:border-box;
 }
 
 body {
+  font-family: ui-monospace,SFMono-Regular,SF Mono,Menlo,Consolas,Liberation Mono,monospace;
   background: #333;
   padding: 0;
   margin: 0;
@@ -25,4 +32,44 @@ body {
 
 .game-container canvas {
   image-rendering: pixelated;
+}
+
+.box {
+  margin: .25rem 0;
+  font-size: 8px;
+  /* padding: 22px 20px 23px 20px; */
+}
+
+
+.box:after {
+  
+  pointer-events: none;
+}
+
+.red-box:after {
+  border-image: url(https://i.ibb.co/b6YNCS6/wooden-gui.png) 10 stretch;
+}
+
+.content {
+  position: absolute;
+  background-color: #3F2832;
+  max-height: 90%;
+  left: 2.5rem;
+  right: 2.5rem;
+  bottom: .25rem;
+  border: 10px solid transparent;
+  padding: 0.5rem 0.25rem;
+  border-image: url(https://i.ibb.co/b6YNCS6/wooden-gui.png) 10 stretch;
+  box-sizing: border-box;
+  overflow: auto;
+  image-rendering: pixelated;
+  color: white;
+}
+
+.title{
+  font-weight: bold;
+  font-size: 16px;
+}
+.content p{
+  font-size: 8px;
 }

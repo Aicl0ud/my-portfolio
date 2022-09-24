@@ -2,12 +2,16 @@ import React, { Component } from "react";
 import GameObject from "../components/GameObject.js";
 import OverworldMap from "../components/OverworldMap.js";
 import DirectionInput from "../components/DirectionInput.js";
+import utils from "../components/utils.js";
 
 class Overworld extends Component {
   constructor(props) {
     super(props);
     this.element = props.element;
-    this.canvas = props.element.querySelector(".game-canvas");
+    this.canvas = {
+      width: utils.withGrid(352),
+      height: utils.withGrid(198),
+    };
     this.ctx = props.element.querySelector("canvas").getContext("2d");
     this.map = null;
   }
@@ -27,7 +31,6 @@ class Overworld extends Component {
 
       //Establish the camera person
       const cameraPerson = this.map.gameObjects.player;
-      // console.log(cameraPerson);
 
       //Update all objects
       Object.values(this.map.gameObjects).forEach((object) => {

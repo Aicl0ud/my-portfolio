@@ -7,6 +7,7 @@ class OverworldMap extends Component {
     super(config);
     this.gameObjects = config.gameObjects;
     this.walls = config.walls || {};
+    this.items = config.items || {};
 
     this.lowerImage = new Image();
     this.lowerImage.src = config.lowerSrc;
@@ -34,6 +35,30 @@ class OverworldMap extends Component {
   isSpaceTaken(currentX, currentY, direction) {
     const { x, y } = utils.nextPosition(currentX, currentY, direction);
     return this.walls[`${x},${y}`] || false;
+  }
+
+  isAction(currentPosition, targetPosition) {
+    if (
+      utils.arrayEquals(
+        [currentPosition.x - 1, currentPosition.y],
+        [targetPosition.x, targetPosition.y]
+      ) ||
+      utils.arrayEquals(
+        [currentPosition.x + 1, currentPosition.y],
+        [targetPosition.x, targetPosition.y]
+      ) ||
+      utils.arrayEquals(
+        [currentPosition.x, currentPosition.y - 1],
+        [targetPosition.x, targetPosition.y]
+      ) ||
+      utils.arrayEquals(
+        [currentPosition.x, currentPosition.y + 1],
+        [targetPosition.x, targetPosition.y]
+      )
+    ) {
+      return true;
+    }
+    return false;
   }
 
   mountObjects() {

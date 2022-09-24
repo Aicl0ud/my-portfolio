@@ -13,6 +13,10 @@ class DirectionInput extends Component {
       KeyA: "left",
       ArrowRight: "right",
       KeyD: "right",
+      Space: "interact",
+      Enter: "interact",
+      KeyX: "interact",
+      KeyZ: "interact",
     };
   }
 
