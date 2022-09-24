@@ -18,6 +18,9 @@ const Maps = () => {
           src: "/images/characters/player/fPlayer_[human].png",
         }),
       },
+      items: {
+        [utils.asGridCoord(10, 4)]: true,
+      },
       walls: {
         //Wall top
         [utils.asGridCoord(2, 2)]: true,

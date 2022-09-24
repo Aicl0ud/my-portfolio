@@ -76,7 +76,6 @@ class Sprite extends Component {
   }
 
   setAnimation(key) {
-    // console.log(key);
     if (this.currentAnimation !== key) {
       if (key.includes("up") || key.includes("down")) {
         this.currentAnimation = this.currentAnimation;

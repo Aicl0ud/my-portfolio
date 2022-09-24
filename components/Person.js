@@ -17,8 +17,6 @@ class Person extends GameObject {
   }
 
   update(state) {
-    // console.log(state);
-    // this.stateArrow = state.arrow;
     if (this.movingProgressRemaining > 0) {
       this.updatePosition();
     } else {
@@ -28,24 +26,36 @@ class Person extends GameObject {
 
       //Case: We're keyboard ready and have an arrow pressed
       if (this.isPlayerControlled && state.arrow) {
-        this.startBehavior(state, {
-          type: "walk",
-          direction: state.arrow,
-        });
+        if ("updownleftright".includes(state.arrow)) {
+          this.startBehavior(state, {
+            type: "walk",
+            direction: state.arrow,
+          });
+          this.updateSprite(state);
+        }
+
+        if ("interact".includes(state.arrow)) {
+          this.startBehavior(state, {
+            type: "interact",
+            direction: state.arrow,
+          });
+        }
       }
-      this.updateSprite(state);
+      //Reset animation
+      if (this.movingProgressRemaining == 0) {
+        this.updateSprite();
+      }
     }
   }
 
   startBehavior(state, behavior) {
-    // console.log(state);
     //Set character direction to whatever behavior has
-    this.direction = behavior.direction;
-    if (behavior.direction != "up" && behavior.direction != "down") {
-      this.currentDirection = behavior.direction;
-    }
-
     if (behavior.type === "walk") {
+      this.direction = behavior.direction;
+
+      if (behavior.direction != "up" && behavior.direction != "down") {
+        this.currentDirection = behavior.direction;
+      }
       //Stop here if space is not free
       if (state.map.isSpaceTaken(this.x, this.y, this.direction)) {
         return;
@@ -54,6 +64,18 @@ class Person extends GameObject {
       //Ready to walk!
       state.map.moveWall(this.x, this.y, this.direction);
       this.movingProgressRemaining = 16;
+    }
+
+    if (behavior.type === "interact") {
+      var obj = state.map.items;
+      var curr = { x: this.x / 16, y: this.y / 16 };
+      var raw_target = Object.keys(obj)[0].split(",");
+      var target = { x: raw_target[0] / 16, y: raw_target[1] / 16 };
+      //Make an interaction
+      if (state.map.isAction(curr, target)) {
+        document.querySelector(".box").classList.remove("hidden");
+        return;
+      }
     }
   }
 
