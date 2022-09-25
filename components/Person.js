@@ -68,15 +68,54 @@ class Person extends GameObject {
 
     if (behavior.type === "interact") {
       var obj = state.map.items;
-      var curr = { x: this.x / 16, y: this.y / 16 };
-      var raw_target = Object.keys(obj)[0].split(",");
-      var target = { x: raw_target[0] / 16, y: raw_target[1] / 16 };
-      //Make an interaction
-      if (state.map.isAction(curr, target)) {
-        document.querySelector(".box").classList.remove("hidden");
-        return;
+      //Find nearby location
+      // `${this.x},${this.y}`;
+      const currPos = {
+        x: this.x,
+        y: this.y,
+      };
+      const nearby = this.findNearby(state, currPos);
+
+      if (nearby > -1) {
+        var curr = { x: currPos.x / 16, y: currPos.y / 16 };
+        var tarr = Object.keys(obj)[nearby];
+        var raw_target = tarr.split(",");
+        var target = { x: raw_target[0] / 16, y: raw_target[1] / 16 };
+        //Make an interaction
+        if (state.map.isAction(curr, target)) {
+          document.querySelector(".title").textContent = obj[tarr].title;
+          document.querySelector(".msg").textContent = obj[tarr].message;
+          document.querySelector(".box").classList.remove("opacity-0");
+          return;
+        }
       }
+
+      // var curr = { x: this.x / 16, y: this.y / 16 };
+      // var raw_target = Object.keys(obj)[0].split(",");
+      // var target = { x: raw_target[0] / 16, y: raw_target[1] / 16 };
+      // //Make an interaction
+      // if (state.map.isAction(curr, target)) {
+      //   document.querySelector(".box").classList.remove("opacity-0");
+      //   return;
+      // }
     }
+  }
+
+  findNearby(state, position) {
+    var obj = state.map.items;
+    if (Object.keys(obj).includes(`${position.x - 16},${position.y}`)) {
+      return Object.keys(obj).indexOf(`${position.x - 16},${position.y}`);
+    }
+    if (Object.keys(obj).includes(`${position.x + 16},${position.y}`)) {
+      return Object.keys(obj).indexOf(`${position.x + 16},${position.y}`);
+    }
+    if (Object.keys(obj).includes(`${position.x},${position.y - 16}`)) {
+      return Object.keys(obj).indexOf(`${position.x},${position.y - 16}`);
+    }
+    if (Object.keys(obj).includes(`${position.x},${position.y + 16}`)) {
+      return Object.keys(obj).indexOf(`${position.x},${position.y + 16}`);
+    }
+    return -1;
   }
 
   updatePosition() {

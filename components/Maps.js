@@ -18,8 +18,25 @@ const Maps = () => {
           src: "/images/characters/player/fPlayer_[human].png",
         }),
       },
+      npcs: {
+        [utils.asGridCoord(4, 11)]: true, //NPC
+      },
       items: {
-        [utils.asGridCoord(10, 4)]: true,
+        [utils.asGridCoord(10, 4)]: {
+          title: "About me",
+          message:
+            "24 yo | Software Developer | Love to study new things | Interested in blockchain and investment | Familiar with javascript | Javascript is an art 👨‍🎨 🎨",
+        },
+        [utils.asGridCoord(10, 10)]: {
+          title: "Title 2",
+          message:
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In efficitur nisi velit, ac pretium magna pretium at. Vestibulum id condimentum elit, at hendrerit lacus. Nulla non massa sed ante sollicitudin gravida. Duis non fringilla diam. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Phasellus in augue vitae arcu varius aliquet. Etiam pellentesque velit id orci vulputate, laoreet pellentesque neque auctor. Aliquam id massa nulla. Aliquam quis lectus mauris. Praesent id tellus ex. Suspendisse consequat porta sollicitudin. Duis venenatis ultrices justo sed tincidunt. Nullam vehicula, quam in rutrum egestas, dolor libero malesuada ligula, eget commodo lorem purus quis mi. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Etiam consectetur neque vitae neque pretium finibus.",
+        },
+        [utils.asGridCoord(4, 10)]: {
+          title: "Title 3",
+          message:
+            "Integer aliquam faucibus leo eu pretium. Integer vitae leo ante. Duis sit amet elit eu tortor interdum bibendum. In dapibus eget leo ac fermentum. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas commodo metus quis malesuada fringilla. Nullam sit amet luctus dui. Aliquam erat volutpat. Aenean mattis erat quam, a vestibulum ligula dapibus sed. Duis efficitur quam et turpis scelerisque, vitae consectetur tortor finibus. Sed in sollicitudin tellus, sit amet pharetra enim. Aenean nisi quam, maximus mattis urna non, aliquet sodales leo. Vivamus pretium aliquam tortor sed suscipit. Cras tincidunt tristique gravida. Donec nulla lectus, sollicitudin ac ex id, efficitur aliquam nisl.",
+        },
       },
       walls: {
         //Wall top
