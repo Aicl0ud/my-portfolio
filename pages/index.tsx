@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 import Overworld from '../components/Overworld.js';
 import GameObject from '../components/GameObject.js';
 import Maps from '../components/Maps.js'
+import Keyboard from '../components/Keyboard.js'
 
 const Home: NextPage = () => {
   useEffect(() => {
@@ -31,17 +32,22 @@ const Home: NextPage = () => {
 
       <main className="">
         <div className='game-container relative'>
-          <canvas className='game-canvas bg-[#353540]' width={"352"} height={"198"}></canvas>
-          <div id="position" className='absolute bottom-0 right-0 mr-1 text-white'>(x,y)</div>
+          <canvas className='game-canvas bg-[#353540]' width={"320"} height={"180"}></canvas>
+          <div id="position" className='absolute bottom-0 right-0 mr-1 text-white'></div>
 
 
-          <div className='box red-box opacity-0 transition transition-all duration-500'>
+          <div className='box wooden transition transition-all duration-500'>
             <div className='content'>
               <div
                 className='absolute top-0 right-0 font-bold text-red-600 cursor-pointer'
                 onClick={(e) => { (document.querySelector('.box') as Element).classList.add('opacity-0') }}>X</div>
-              <div className='title'></div>
-              <p className='msg'></p>
+              <div className='title'>Get started</div>
+              <hr className='mt-1 mb-2'/>
+              <div className='msg'>
+                <div className="flex items-center gap-0.5">use <Keyboard text={"w,a,s,d"}></Keyboard> or <Keyboard text={"↑,↓,→,←"}></Keyboard> to move </div>
+                <div className="flex items-center gap-0.5">use <Keyboard text={"z,x"}></Keyboard> or <Keyboard word={" ↵ ,spacebar"}></Keyboard> to interact </div>
+                <div>Then go 3 red marks 🔻 to know me more</div>
+              </div>
             </div>
           </div>
 

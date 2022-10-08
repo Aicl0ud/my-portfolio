@@ -8,7 +8,8 @@
 }
 
 * {
-  
+  --scrollbarBG: #CFD8DC;
+  --thumbBG: #90A4AE;
   box-sizing:border-box;
 }
 
@@ -18,12 +19,35 @@ body {
   padding: 0;
   margin: 0;
   overflow: hidden;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
+
+body::-webkit-scrollbar {
+  width: 11px;
+}
+body {
+  scrollbar-width: thin;
+  scrollbar-color: var(--thumbBG) var(--scrollbarBG);
+}
+body::-webkit-scrollbar-track {
+  background: var(--scrollbarBG);
+}
+body::-webkit-scrollbar-thumb {
+  background-color: var(--thumbBG) ;
+  border-radius: 6px;
+  border: 3px solid var(--scrollbarBG);
+}
+
 
 .game-container {
   position: relative; 
-  width: 352px;
-  height: 198px;
+  width: 320px;
+  height: 180px;
   margin: 0 auto;
   outline: 1px solid #fff;
 
@@ -36,7 +60,7 @@ body {
 
 .box {
   margin: .25rem 0;
-  font-size: 8px;
+  font-size: 6px;
   /* padding: 22px 20px 23px 20px; */
 }
 
@@ -46,7 +70,7 @@ body {
   pointer-events: none;
 }
 
-.red-box:after {
+.wooden:after {
   border-image: url(https://i.ibb.co/b6YNCS6/wooden-gui.png) 10 stretch;
 }
 
@@ -59,7 +83,7 @@ body {
   bottom: .25rem;
   border: 10px solid transparent;
   padding: 0.5rem 0.25rem;
-  border-image: url(https://i.ibb.co/b6YNCS6/wooden-gui.png) 10 stretch;
+  border-image: url(/images/wooden-gui.png) 10 stretch;
   box-sizing: border-box;
   overflow: auto;
   image-rendering: pixelated;
@@ -71,5 +95,93 @@ body {
   font-size: 16px;
 }
 .content p{
-  font-size: 8px;
+  font-size: 7px;
+}
+
+.btn{
+  background-image: url(/images/btn.png);
+  image-rendering: pixelated;
+  background-repeat: no-repeat;
+  background-size: cover;
+  width: 15px;
+  height: 15px;
+  line-height: 12px;
+  font-size: 6px;
+  text-align: center;
+  cursor: default;
+}
+
+.btn:hover{
+  background-image: url(/images/btn_on.png);
+  image-rendering: pixelated;
+  line-height: 14px;
+}
+
+.btn-long{
+  background-image: url(/images/btn-long.png);
+  image-rendering: pixelated;
+  background-repeat: no-repeat;
+  background-size: cover;
+  width: 46px;
+  height: 14px;
+  line-height: 12px;
+  font-size: 6px;
+  text-align: center;
+  cursor: default;
+}
+
+.btn-long:hover{
+  background-image: url(/images/btn-long_on.png);
+  image-rendering: pixelated;
+  line-height: 14px;
+}
+
+.btn-md{
+  background-image: url(/images/btn-md.png);
+  image-rendering: pixelated;
+  background-repeat: no-repeat;
+  background-size: cover;
+  width: 30px;
+  height: 14px;
+  line-height: 12px;
+  font-size: 6px;
+  text-align: center;
+  cursor: default;
+}
+
+.btn-md:hover{
+  background-image: url(/images/btn-md_on.png);
+  image-rendering: pixelated;
+  line-height: 14px;
+}
+
+#title-primary{
+  font-weight: bold;
+  font-size: 12px;
+}
+
+#title-secondary{
+  font-weight: bold;
+}
+
+#description{
+  font-size: 5px;
+}
+
+.icon{
+  padding: 2px;
+  height: 16px;
+  width: fit-content;
+}
+
+.icon:hover{
+  opacity: 50%;
+}
+
+.invert{
+  filter: invert(1);
+}
+
+.brighten{
+  filter: brightness(10000);
 }

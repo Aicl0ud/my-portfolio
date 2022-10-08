@@ -9,8 +9,8 @@ class Overworld extends Component {
     super(props);
     this.element = props.element;
     this.canvas = {
-      width: utils.withGrid(352),
-      height: utils.withGrid(198),
+      width: utils.withGrid(320),
+      height: utils.withGrid(180),
     };
     this.ctx = props.element.querySelector("canvas").getContext("2d");
     this.map = null;
@@ -34,6 +34,7 @@ class Overworld extends Component {
 
       //Update all objects
       Object.values(this.map.gameObjects).forEach((object) => {
+        // console.log(object);
         object.update({
           arrow: this.directionInput.direction,
           map: this.map,

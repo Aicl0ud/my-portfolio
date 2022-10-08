@@ -17,6 +17,7 @@ class DirectionInput extends Component {
       Enter: "interact",
       KeyX: "interact",
       KeyZ: "interact",
+      Escape: "exit",
     };
   }
 

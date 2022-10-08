@@ -64,7 +64,7 @@ class OverworldMap extends Component {
   mountObjects() {
     Object.values(this.gameObjects).forEach((o) => {
       //TODO: determine if this object should actually mount
-      o.mount(this);
+      // o.mount(this);
     });
   }
 

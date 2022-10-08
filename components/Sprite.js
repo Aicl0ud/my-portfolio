@@ -13,7 +13,7 @@ class Sprite extends Component {
 
     //Shadow
     this.shadow = new Image();
-    this.useShadow = true; //config.useShadow || false
+    this.useShadow = config.useShadow || false;
     if (this.useShadow) {
       this.shadow.src = "/images/characters/shadow.png";
     }
@@ -23,6 +23,12 @@ class Sprite extends Component {
 
     //Configure Animation & Initial State
     this.animations = config.animations || {
+      "idle-idle": [
+        [0, 0],
+        [1, 0],
+        [2, 0],
+        [3, 0],
+      ],
       // "idle-down": [[0, 0]],
       "idle-right": [
         [0, 1],
@@ -109,9 +115,9 @@ class Sprite extends Component {
     const x = this.gameObject.x - 8 + utils.withGrid(10.5) - cameraPerson.x;
     const y = this.gameObject.y - 18 + utils.withGrid(6) - cameraPerson.y;
     //For debug position
-    document.querySelector("#position").textContent = `${parseInt(
-      cameraPerson.x / 16
-    )}, ${parseInt(cameraPerson.y / 16)}`;
+    // document.querySelector("#position").textContent = `${parseInt(
+    //   cameraPerson.x / 16
+    // )}, ${parseInt(cameraPerson.y / 16)}`;
 
     this.isShadowLoaded && ctx.drawImage(this.shadow, x, y);
 

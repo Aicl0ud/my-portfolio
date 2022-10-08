@@ -9,13 +9,34 @@ const Maps = () => {
       gameObjects: {
         player: new Person({
           isPlayerControlled: true,
-          x: utils.withGrid(6),
-          y: utils.withGrid(5),
+          x: utils.withGrid(2),
+          y: utils.withGrid(3),
+          direction: "left",
+          useShadow: true,
         }),
-        npc1: new Person({
+        // npc1: new Person({
+        //   x: utils.withGrid(4),
+        //   y: utils.withGrid(11),
+        //   useShadow: true,
+        //   src: "/images/characters/player/fPlayer_[human].png",
+        // }),
+        arrow1: new Person({
+          x: utils.withGrid(10),
+          y: utils.withGrid(3),
+          src: "/images/objects/red-arrow.png",
+          direction: "idle",
+        }),
+        arrow2: new Person({
+          x: utils.withGrid(10),
+          y: utils.withGrid(9),
+          src: "/images/objects/red-arrow.png",
+          direction: "idle",
+        }),
+        arrow3: new Person({
           x: utils.withGrid(4),
-          y: utils.withGrid(11),
-          src: "/images/characters/player/fPlayer_[human].png",
+          y: utils.withGrid(9),
+          src: "/images/objects/red-arrow.png",
+          direction: "idle",
         }),
       },
       npcs: {
@@ -25,17 +46,64 @@ const Maps = () => {
         [utils.asGridCoord(10, 4)]: {
           title: "About me",
           message:
-            "24 yo | Software Developer | Love to study new things | Interested in blockchain and investment | Familiar with javascript | Javascript is an art 👨‍🎨 🎨",
+            "Sawasdee 🙏! I'm Kiw(sound Q in English) currently lives in Bankok, Thailand. I graduated🎓 from faculty of ICT, Mahidol University with B.Sc degree. I'm a self tough learner💪 and 💚 to explore new things about coding 💻. The most familiar coding language is javascript. Interested in blockchain 🔗 and investment 🏦.",
         },
         [utils.asGridCoord(10, 10)]: {
-          title: "Title 2",
-          message:
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. In efficitur nisi velit, ac pretium magna pretium at. Vestibulum id condimentum elit, at hendrerit lacus. Nulla non massa sed ante sollicitudin gravida. Duis non fringilla diam. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Phasellus in augue vitae arcu varius aliquet. Etiam pellentesque velit id orci vulputate, laoreet pellentesque neque auctor. Aliquam id massa nulla. Aliquam quis lectus mauris. Praesent id tellus ex. Suspendisse consequat porta sollicitudin. Duis venenatis ultrices justo sed tincidunt. Nullam vehicula, quam in rutrum egestas, dolor libero malesuada ligula, eget commodo lorem purus quis mi. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Etiam consectetur neque vitae neque pretium finibus.",
+          title: "Experiences & Skills",
+          message: `
+          <div id="title-primary">Education 📚</div>
+          <div id="title-secondary">Mahidol University, Nakhon Pathom – Bachelor’s degree</div>
+          <div>Aug 2017 - Jun 2021</div>
+          <div id="title-secondary">St. Peter School, Nakhon Pathom – High school</div>
+          <div>Oct 2004 - May 2017</div>
+          <div id="title-primary">Experiences 👨‍💻</div>
+          <div class="flex gap-1"><div id="timeexp"></div> as a software developer @Nuxos Consulting Co,. Ltd.</div>
+          <div id="title-primary">Skills</div>
+          <div>
+            <div id="title-secondary">Communication:</div>
+            <li class="list-disc">English</li>
+            <li class="list-disc">Thai</li>
+          </div>
+          <div>
+            <div id="title-secondary">Software & Programs:</div> 
+            <div class="w-[60%] flex flex-wrap">
+              <img class="icon" src="/icons/vscode.png" alt="VSCode" title="VSCode"/>
+              <img class="icon" src="/icons/github.png" alt="Github" title="Github"/>
+              <img class="icon" src="/icons/js.png" alt="javascript" title="javascript"/>
+              <img class="icon" src="/icons/react.png" alt="React" title="React"/>
+              <img class="icon invert" src="/icons/nextjs.png" alt="Next.js" title="Next.js"/>
+              <img class="icon" src="/icons/csharp.png" alt="C#" title="C#"/>
+              <img class="icon" src="/icons/java.png" alt="Java" title="Java"/>
+              <img class="icon" src="/icons/solidity.png" alt="Solidity" title="Solidity"/>
+              <img class="icon" src="/icons/rust.png" alt="Rust" title="Rust"/>
+              <img class="icon brighten" src="/icons/etherjs.png" alt="Ethers.js" title="Ethers.js"/>
+              <img class="icon" src="/icons/hardhat.png" alt="hardhat" title="hardhat"/>
+              <img class="icon" src="/icons/rails.png" alt="Ruby on Rails" title="Ruby on Rails"/>
+              <img class="icon" src="/icons/tailwind.png" alt="Tailwind CSS" title="Tailwind CSS"/>
+              <img class="icon" src="/icons/bootstrap.png" alt="Bootstrap" title="Bootstrap"/>
+              <img class="icon" src="/icons/rollbar.png" alt="Rollbar" title="Rollbar"/>
+            </div>
+          </div>
+          <div>
+            <div id="title-secondary">Management:</div>
+            <li class="list-disc">Excellent management, organized, and flexible working with well-solving skills.</li>
+          </div>
+          <div>
+            <div id="title-secondary">Multitasking:</div>
+            <li class="list-disc">Good in handling multiple tasks and handling stress well.</li>
+          </div>
+          `,
         },
         [utils.asGridCoord(4, 10)]: {
-          title: "Title 3",
-          message:
-            "Integer aliquam faucibus leo eu pretium. Integer vitae leo ante. Duis sit amet elit eu tortor interdum bibendum. In dapibus eget leo ac fermentum. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas commodo metus quis malesuada fringilla. Nullam sit amet luctus dui. Aliquam erat volutpat. Aenean mattis erat quam, a vestibulum ligula dapibus sed. Duis efficitur quam et turpis scelerisque, vitae consectetur tortor finibus. Sed in sollicitudin tellus, sit amet pharetra enim. Aenean nisi quam, maximus mattis urna non, aliquet sodales leo. Vivamus pretium aliquam tortor sed suscipit. Cras tincidunt tristique gravida. Donec nulla lectus, sollicitudin ac ex id, efficitur aliquam nisl.",
+          title: "Contact 🪪",
+          message: `<div class="grid grid-cols-6">
+              <div>Email:</div>
+              <a href="mailto:teerasit.won@gmail.com" target="_blank" class="col-span-5">teerasit.won@gmail.com</a> 
+              <div>Mobile:</div>
+              <a href="tel:+66925531998" target="_blank" class="col-span-5">+66925531998</a>
+              <div>LinkedIn:</div>
+              <a href="https://www.linkedin.com/in/teerasit-wongpa/" target="_blank" class="col-span-5">teerasit-wongpa</a>
+            </div>`,
         },
       },
       walls: {

@@ -17,6 +17,10 @@ class Person extends GameObject {
   }
 
   update(state) {
+    const currPos = {
+      x: this.x,
+      y: this.y,
+    };
     if (this.movingProgressRemaining > 0) {
       this.updatePosition();
     } else {
@@ -40,12 +44,17 @@ class Person extends GameObject {
             direction: state.arrow,
           });
         }
+
+        if (this.findNearby(state, currPos) < 0 || state.arrow == "exit") {
+          document.querySelector(".box").classList.add("opacity-0");
+        }
       }
       //Reset animation
       if (this.movingProgressRemaining == 0) {
         this.updateSprite();
       }
     }
+    this.calculateTime("7/1/21");
   }
 
   startBehavior(state, behavior) {
@@ -84,7 +93,7 @@ class Person extends GameObject {
         //Make an interaction
         if (state.map.isAction(curr, target)) {
           document.querySelector(".title").textContent = obj[tarr].title;
-          document.querySelector(".msg").textContent = obj[tarr].message;
+          document.querySelector(".msg").innerHTML = obj[tarr].message;
           document.querySelector(".box").classList.remove("opacity-0");
           return;
         }
@@ -130,6 +139,18 @@ class Person extends GameObject {
       return;
     }
     this.sprite.setAnimation("idle-" + this.currentDirection);
+  }
+
+  calculateTime(timedate) {
+    const today = new Date();
+    const timeDate = new Date(timedate);
+    const year = today.getFullYear() - timeDate.getFullYear();
+    const month = today.getMonth() - timeDate.getMonth();
+    if (!!document.querySelector("#timeexp")) {
+      document.querySelector(
+        "#timeexp"
+      ).textContent = `${year} yr ${month} mos`;
+    }
   }
 }
 export default Person;

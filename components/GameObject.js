@@ -5,10 +5,11 @@ class GameObject extends Component {
     super(config);
     this.x = config.x || 0;
     this.y = config.y || 0;
-    this.direction = config.direction || "right";
+    this.direction = config.direction || "idle";
     this.sprite = new Sprite({
       gameObject: this,
       src: config.src || "/images/characters/player/mPlayer_[human].png",
+      useShadow: config.useShadow,
     });
   }
 
@@ -16,8 +17,6 @@ class GameObject extends Component {
     this.mounted = true;
     map.addWall(this.x, this.y);
   }
-
-  update() {}
 }
 
 export default GameObject;
