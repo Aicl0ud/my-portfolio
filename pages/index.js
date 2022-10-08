@@ -1,10 +1,9 @@
 import Head from "next/head";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import Overworld from "../components/Overworld";
-import GameObject from "../components/GameObject";
-import Maps from "../components/Maps";
-import Keyboard from "../components/Keyboard";
+import Overworld from "../components/overworld";
+import Maps from "../components/maps";
+import Keyboard from "../components/keyboard";
 
 const Index = () => {
   useEffect(() => {
