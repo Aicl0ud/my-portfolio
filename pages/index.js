@@ -2,8 +2,8 @@ import Head from "next/head";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import Overworld from "../components/overworld";
-import Maps from "../components/maps";
-import Keyboard from "../components/keyboard";
+import Maps from "../components/Maps";
+import Keyboard from "../components/Keyboard";
 
 const Index = () => {
   useEffect(() => {
