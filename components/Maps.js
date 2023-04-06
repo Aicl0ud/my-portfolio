@@ -56,8 +56,17 @@ const Maps = () => {
           <div>Aug 2017 - Jun 2021</div>
           <div id="title-secondary">St. Peter School, Nakhon Pathom – High school</div>
           <div>Oct 2004 - May 2017</div>
+          <br>
           <div id="title-primary">Experiences 👨‍💻</div>
-          <div class="flex gap-1"><div id="timeexp"></div> as a software developer @Nuxos Consulting Co,. Ltd.</div>
+          <div class="flex gap-1">
+            <div id="timeexp" data-start="7/1/21" data-end="1/12/22" class="w-1/5"></div> 
+            <div class="w-4/5">Jr. Software Developer at Nuxos Consulting Co,. Ltd.</div>
+          </div>
+          <div class="flex gap-1">
+            <div id="timeexp" data-start="1/4/23" class="w-1/5"></div> 
+            <div class="w-4/5">Software Engineer at Opn Co,. Ltd.</div>
+          </div>
+          <br>
           <div id="title-primary">Skills</div>
           <div>
             <div id="title-secondary">Communication:</div>

@@ -54,7 +54,7 @@ class Person extends GameObject {
         this.updateSprite();
       }
     }
-    this.calculateTime("7/1/21");
+    this.calculateTime();
   }
 
   startBehavior(state, behavior) {
@@ -141,16 +141,17 @@ class Person extends GameObject {
     this.sprite.setAnimation("idle-" + this.currentDirection);
   }
 
-  calculateTime(timedate) {
-    const today = new Date();
-    const timeDate = new Date(timedate);
-    const year = today.getFullYear() - timeDate.getFullYear();
-    const month = today.getMonth() - timeDate.getMonth();
-    if (!!document.querySelector("#timeexp")) {
-      document.querySelector(
-        "#timeexp"
-      ).textContent = `${year} yr ${month} mos`;
-    }
+  calculateTime() {
+    document.querySelectorAll('#timeexp').forEach((e)=>{
+      const data = e.dataset
+      const today = new Date();
+      const startDate = new Date(data.start);
+      const endDate = new Date(data.end);
+      const endOrToday = (data.end ? endDate : today);
+      const year = Math.abs(endOrToday.getFullYear() - startDate.getFullYear());
+      const month = Math.abs(endOrToday.getMonth() - startDate.getMonth());
+      e.textContent = `${year} yr ${month} mos`;
+    })
   }
 }
 export default Person;
