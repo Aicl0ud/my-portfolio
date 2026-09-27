@@ -1,8 +1,8 @@
 import { PORTFOLIO_STATIONS, type StationId } from "../../data/portfolio";
 
 export const TILE_SIZE = 16;
-export const VIEWPORT_WIDTH = 320;
-export const VIEWPORT_HEIGHT = 180;
+export const VIEWPORT_WIDTH = 256;
+export const VIEWPORT_HEIGHT = 192;
 export const MAP_SIZE = 224;
 
 export type Direction = "up" | "down" | "left" | "right";

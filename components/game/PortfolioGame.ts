@@ -123,7 +123,9 @@ export class PortfolioGame {
       this.room.addChild(marker);
     }
     const shadow = new Sprite(shadowTexture);
-    shadow.position.set(-8, 6);
+    // The shadow asset is a 32px frame with its ellipse drawn at y=26..31,
+    // so it must share the character frame origin to sit directly underfoot.
+    shadow.position.set(-8, -18);
     this.playerSprite = new Sprite(this.frameTexture(4, 1));
     this.playerSprite.position.set(-8, -18);
     this.player.addChild(shadow, this.playerSprite);
