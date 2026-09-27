@@ -3,6 +3,8 @@ import { useRef } from "react";
 import type { Group } from "three";
 
 import { useKeyboardMovement } from "../../hooks/useKeyboardMovement";
+import { useInteractionKeys } from "../../hooks/useInteractionKeys";
+import { findNearbyStation } from "../../lib/stations";
 import { moveWithCollisions } from "../../lib/world";
 import { useGameStore } from "../../store/game";
 
@@ -12,6 +14,7 @@ export function Player() {
   const group = useRef<Group>(null);
   const elapsed = useRef(0);
   useKeyboardMovement();
+  useInteractionKeys();
 
   useFrame((_, delta) => {
     if (!group.current) return;
@@ -34,6 +37,9 @@ export function Player() {
       group.current.position.z = next.z;
       group.current.rotation.y = Math.atan2(direction.x, direction.z);
     }
+
+    const nearbyStationId = findNearbyStation(next);
+    if (nearbyStationId !== state.nearbyStationId) state.setNearbyStation(nearbyStationId);
 
     elapsed.current += delta;
     group.current.position.y = moving ? Math.abs(Math.sin(elapsed.current * 9)) * 0.08 : 0;

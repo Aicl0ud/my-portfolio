@@ -1,6 +1,7 @@
 import { Canvas } from "@react-three/fiber";
 
 import { CameraRig } from "./CameraRig";
+import { InteractiveStations } from "./InteractiveStations";
 import { Player } from "./Player";
 import { PortfolioRoom } from "./PortfolioRoom";
 
@@ -26,6 +27,7 @@ export default function SceneCanvas() {
       />
       <CameraRig />
       <PortfolioRoom />
+      <InteractiveStations />
       <Player />
     </Canvas>
   );

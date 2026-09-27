@@ -98,21 +98,6 @@ function Plant() {
   );
 }
 
-function Station({ position, color }: { position: [number, number, number]; color: string }) {
-  return (
-    <group position={position}>
-      <mesh castShadow position={[0, 0.12, 0]}>
-        <cylinderGeometry args={[0.55, 0.68, 0.22, 6]} />
-        <meshStandardMaterial color="#2a2330" roughness={0.75} />
-      </mesh>
-      <mesh position={[0, 0.28, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-        <ringGeometry args={[0.27, 0.44, 24]} />
-        <meshStandardMaterial color={color} emissive={color} emissiveIntensity={2.4} />
-      </mesh>
-    </group>
-  );
-}
-
 export function PortfolioRoom() {
   return (
     <group>
@@ -139,9 +124,6 @@ export function PortfolioRoom() {
       <Desk />
       <Bookshelf />
       <Plant />
-      <Station position={[-3.6, 0, 2.15]} color="#ef6b69" />
-      <Station position={[3.65, 0, 2.9]} color="#72d5ac" />
-      <Station position={[4.35, 0, -1.65]} color="#72aef2" />
 
       <ContactShadows opacity={0.32} scale={18} blur={2.4} far={10} position={[0, 0.02, 0]} />
     </group>

@@ -1,6 +1,8 @@
 import dynamic from "next/dynamic";
 import Head from "next/head";
 
+import { PortfolioOverlay } from "../components/ui/PortfolioOverlay";
+
 const SceneCanvas = dynamic(() => import("../components/scene/SceneCanvas"), {
   ssr: false,
   loading: () => <div className="scene-loading">Building the room…</div>,
@@ -32,6 +34,7 @@ export default function Home() {
 
       <main id="top" className="scene-shell">
         <SceneCanvas />
+        <PortfolioOverlay />
         <div className="scene-intro" aria-live="polite">
           <p className="eyebrow">Welcome to my space</p>
           <h1>Walk through my work in 3D.</h1>
