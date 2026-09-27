@@ -33,6 +33,10 @@ body {
     radial-gradient(circle at 50% 35%, #252538 0, #11131c 45%, #07080c 100%);
 }
 
+body:has(.readable-page) {
+  overflow: auto;
+}
+
 button,
 a {
   font: inherit;
@@ -41,6 +45,10 @@ a {
 .site-shell,
 main {
   min-height: 100dvh;
+}
+
+main:has(.readable-page) {
+  display: block;
 }
 
 main {
@@ -56,6 +64,12 @@ main {
   height: calc(180px * var(--game-scale));
   display: grid;
   place-items: center;
+}
+
+.game-mode-hidden {
+  position: fixed;
+  visibility: hidden;
+  pointer-events: none;
 }
 
 .game-viewport {
@@ -99,13 +113,88 @@ main {
   display: grid;
   grid-template-columns: auto auto;
   gap: 4px 12px;
-  min-width: 126px;
+  min-width: 176px;
   padding: 9px 11px;
   border: 2px solid #d9c49a;
   background: rgb(38 27 34 / 92%);
   color: #fff8dc;
   font-size: 9px;
   box-shadow: 0 4px 0 #160f13;
+}
+
+.game-toolbar {
+  position: fixed;
+  top: 18px;
+  right: 18px;
+  z-index: 4;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.game-toolbar button,
+.readable-actions a,
+.readable-actions button,
+.help-card > button {
+  padding: 8px 10px;
+  border: 2px solid #d9c49a;
+  border-radius: 3px;
+  background: #3f2832;
+  color: #fff8dc;
+  font-size: 9px;
+  text-decoration: none;
+  box-shadow: 0 3px 0 #160f13;
+  cursor: pointer;
+}
+
+.game-toolbar button:focus-visible,
+.readable-actions a:focus-visible,
+.readable-actions button:focus-visible,
+.help-card > button:focus-visible,
+.control:focus-visible,
+.interaction-prompt:focus-visible,
+.panel-close:focus-visible {
+  outline: 3px solid #72d5ac;
+  outline-offset: 3px;
+}
+
+.mini-map {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 2;
+  width: 88px;
+  aspect-ratio: 1;
+  border: 3px solid #d9c49a;
+  background:
+    linear-gradient(rgb(255 255 255 / 5%) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(255 255 255 / 5%) 1px, transparent 1px),
+    #31242c;
+  background-size: calc(100% / 14) calc(100% / 14);
+  box-shadow: 0 4px 0 #160f13;
+}
+
+.mini-map i,
+.mini-map b {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #ef6b69;
+  transform: translate(-50%, -50%);
+}
+
+.mini-map i.visited {
+  background: #f6c453;
+}
+
+.mini-map b {
+  z-index: 1;
+  width: 8px;
+  height: 8px;
+  border: 2px solid #fff;
+  background: #72d5ac;
 }
 
 .explore-progress strong {
@@ -164,6 +253,105 @@ kbd {
   padding: 20px;
   background: rgb(6 7 11 / 78%);
   backdrop-filter: blur(5px);
+}
+
+.help-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgb(6 7 11 / 82%);
+  backdrop-filter: blur(7px);
+}
+
+.help-card {
+  width: min(460px, 100%);
+  padding: clamp(24px, 6vw, 42px);
+  border: 3px solid #d9c49a;
+  background: #30222a;
+  color: #fff8dc;
+  box-shadow: 0 12px 0 #160f13;
+}
+
+.help-card h2 {
+  margin: 6px 0 16px;
+  color: #fff;
+  font-size: clamp(22px, 6vw, 36px);
+}
+
+.help-card p,
+.help-card li {
+  font-family: ui-monospace, monospace;
+  font-size: 13px;
+  line-height: 1.65;
+}
+
+.help-card ul {
+  display: grid;
+  gap: 8px;
+  padding-left: 18px;
+  margin-block: 20px 24px;
+}
+
+.readable-page {
+  width: min(1040px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 64px 0 100px;
+  font-family: ui-monospace, monospace;
+}
+
+.readable-hero {
+  padding: clamp(28px, 7vw, 72px);
+  border: 2px solid #856879;
+  background: #211820;
+}
+
+.readable-hero h1 {
+  max-width: 780px;
+  margin: 8px 0 18px;
+  font-family: "Nokia Pixel", ui-monospace, monospace;
+  font-size: clamp(35px, 8vw, 76px);
+  line-height: 1;
+}
+
+.readable-hero > p:not(.eyebrow) {
+  max-width: 680px;
+  color: #d8ccd3;
+  font-size: clamp(15px, 2.4vw, 20px);
+  line-height: 1.7;
+}
+
+.readable-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 28px;
+}
+
+.readable-section {
+  display: grid;
+  grid-template-columns: 70px minmax(0, 1fr);
+  gap: 24px;
+  padding: clamp(32px, 6vw, 64px) clamp(10px, 5vw, 54px);
+  border-bottom: 1px solid #4d3b46;
+}
+
+.readable-section > span {
+  color: #f6c453;
+}
+
+.readable-section h2 {
+  margin: 0 0 24px;
+  font-family: "Nokia Pixel", ui-monospace, monospace;
+  font-size: clamp(24px, 5vw, 42px);
+}
+
+.readable-section > div > p {
+  max-width: 760px;
+  color: #d8ccd3;
+  line-height: 1.7;
 }
 
 .story-panel {
@@ -419,10 +607,52 @@ kbd {
   .interaction-prompt {
     bottom: 12px;
   }
+
+  .game-toolbar {
+    top: 12px;
+    right: 12px;
+    max-width: 140px;
+  }
+
+  .game-toolbar button {
+    padding: 6px 7px;
+    font-size: 8px;
+  }
+
+  .explore-progress {
+    top: 12px;
+    left: 12px;
+    min-width: 150px;
+  }
+
+  .mini-map {
+    display: none;
+  }
+
+  .readable-section {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
 }
 
 @media (hover: none), (pointer: coarse) {
   .touch-controls {
     display: flex;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .panel-backdrop,
+  .help-backdrop {
+    backdrop-filter: none;
   }
 }
