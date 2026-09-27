@@ -20,6 +20,11 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000).
 
+The in-browser map editor is available at [http://localhost:3000/editor](http://localhost:3000/editor).
+It edits collision tiles, the player spawn, and story marker positions over the current
+room artwork. Saved layouts apply to the game in the same browser. Use JSON export when
+you want to review or commit a layout as source data.
+
 ## Controls
 
 - Move with WASD, arrow keys, or the on-screen direction pad.
@@ -45,4 +50,6 @@ build. Run individual stages with `npm run lint`, `npm run typecheck`, `npm test
 - `components/game/PortfolioGame.ts` owns the PixiJS lifecycle, movement, camera, and rendering.
 - `components/game/PixiStage.tsx` connects the game to React UI and browser preferences.
 - `data/portfolio.ts` is the single source of truth for portfolio content and hotspots.
+- `data/mapLayout.ts` owns the versioned default layout and validates editor drafts.
+- `components/editor/MapEditor.tsx` provides visual layout editing and JSON exchange.
 - `components/game/ReadablePortfolio.tsx` keeps all content available as semantic HTML.

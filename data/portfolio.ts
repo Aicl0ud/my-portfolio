@@ -4,14 +4,13 @@ export type PortfolioStation = {
   id: StationId;
   label: string;
   shortLabel: string;
-  tile: { x: number; y: number };
 };
 
 export const PORTFOLIO_STATIONS: PortfolioStation[] = [
-  { id: "about", label: "About Kiw", shortLabel: "About", tile: { x: 10, y: 4 } },
-  { id: "experience", label: "Experience & skills", shortLabel: "Experience", tile: { x: 10, y: 10 } },
-  { id: "projects", label: "Selected projects", shortLabel: "Projects", tile: { x: 8, y: 7 } },
-  { id: "contact", label: "Contact Kiw", shortLabel: "Contact", tile: { x: 4, y: 10 } },
+  { id: "about", label: "About Kiw", shortLabel: "About" },
+  { id: "experience", label: "Experience & skills", shortLabel: "Experience" },
+  { id: "projects", label: "Selected projects", shortLabel: "Projects" },
+  { id: "contact", label: "Contact Kiw", shortLabel: "Contact" },
 ];
 
 export const PROFILE = {

@@ -1,24 +1,33 @@
 import { useCallback, useEffect, useRef, useState, type PointerEvent } from "react";
+import Link from "next/link";
 import { PORTFOLIO_STATIONS, type StationId } from "../../data/portfolio";
+import { isTileInBounds, loadMapLayout, type MapLayout } from "../../data/mapLayout";
 import { useReducedMotion } from "../../hooks/useReducedMotion";
 import { PortfolioGame } from "./PortfolioGame";
 import { ReadablePortfolio } from "./ReadablePortfolio";
 import { SoundController } from "./SoundController";
 import { StoryPanel } from "./StoryPanel";
-import { VIEWPORT_HEIGHT, VIEWPORT_WIDTH, type Direction } from "./world";
+import { VIEWPORT_HEIGHT, VIEWPORT_WIDTH, canEnterTile, type Direction } from "./world";
 
 const PROGRESS_KEY = "kiw-portfolio-progress-v1";
 type SavedProgress = { visited: StationId[]; tile: { x: number; y: number } };
 
-function loadProgress(): SavedProgress {
-  const fallback = { visited: [], tile: { x: 2, y: 3 } };
+function loadProgress(layout: MapLayout): SavedProgress {
+  const fallback = { visited: [], tile: layout.spawn };
   try {
     const saved = JSON.parse(localStorage.getItem(PROGRESS_KEY) ?? "null") as SavedProgress | null;
     if (!saved || !Array.isArray(saved.visited) || !saved.tile) return fallback;
     const validIds = new Set(PORTFOLIO_STATIONS.map((station) => station.id));
+    const tile =
+      Number.isInteger(saved.tile.x) &&
+      Number.isInteger(saved.tile.y) &&
+      isTileInBounds(saved.tile, layout) &&
+      canEnterTile(saved.tile.x, saved.tile.y, layout)
+        ? saved.tile
+        : layout.spawn;
     return {
       visited: saved.visited.filter((id) => validIds.has(id)),
-      tile: saved.tile,
+      tile,
     };
   } catch {
     return fallback;
@@ -56,12 +65,13 @@ export default function PixiStage() {
   const canvasRef = useRef<HTMLDivElement>(null);
   const gameRef = useRef<PortfolioGame | null>(null);
   const soundRef = useRef(new SoundController());
+  const [layout] = useState(() => loadMapLayout(window.localStorage));
   const reducedMotion = useReducedMotion();
   const [status, setStatus] = useState<"loading" | "ready" | "error">("loading");
   const [nearbyStationId, setNearbyStationId] = useState<StationId | null>(null);
   const [activeStationId, setActiveStationId] = useState<StationId | null>(null);
   const [visited, setVisited] = useState<StationId[]>([]);
-  const [playerTile, setPlayerTile] = useState({ x: 2, y: 3 });
+  const [playerTile, setPlayerTile] = useState(layout.spawn);
   const [progressLoaded, setProgressLoaded] = useState(false);
   const [muted, setMuted] = useState(true);
   const [showHelp, setShowHelp] = useState(true);
@@ -74,7 +84,7 @@ export default function PixiStage() {
     if (!canvasHost) return;
     const sound = soundRef.current;
 
-    const progress = loadProgress();
+    const progress = loadProgress(layout);
     setVisited(progress.visited);
     setPlayerTile(progress.tile);
     setProgressLoaded(true);
@@ -92,7 +102,7 @@ export default function PixiStage() {
         onTileChange: setPlayerTile,
         onSound: (effect) => sound.play(effect),
       },
-      { initialTile: progress.tile, reducedMotion },
+      { initialTile: progress.tile, reducedMotion, layout },
     );
     gameRef.current = game;
     game.mount(canvasHost).then(
@@ -175,6 +185,7 @@ export default function PixiStage() {
               </button>
               <button type="button" onClick={() => setShowHelp(true)}>Help</button>
               <button type="button" onClick={() => setReadable(true)}>Read portfolio</button>
+              <Link href="/editor">Edit map</Link>
             </div>
 
             <div className="mini-map" aria-label="Room minimap">
@@ -182,10 +193,18 @@ export default function PixiStage() {
                 <i
                   key={station.id}
                   className={visited.includes(station.id) ? "visited" : ""}
-                  style={{ left: `${(station.tile.x / 14) * 100}%`, top: `${(station.tile.y / 14) * 100}%` }}
+                  style={{
+                    left: `${(layout.stations[station.id].x / layout.width) * 100}%`,
+                    top: `${(layout.stations[station.id].y / layout.height) * 100}%`,
+                  }}
                 />
               ))}
-              <b style={{ left: `${(playerTile.x / 14) * 100}%`, top: `${(playerTile.y / 14) * 100}%` }} />
+              <b
+                style={{
+                  left: `${(playerTile.x / layout.width) * 100}%`,
+                  top: `${(playerTile.y / layout.height) * 100}%`,
+                }}
+              />
             </div>
 
             {nearbyStation && !activeStationId ? (

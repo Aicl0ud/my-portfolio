@@ -8,6 +8,7 @@ import {
   type Ticker,
 } from "pixi.js";
 import { PORTFOLIO_STATIONS, type StationId } from "../../data/portfolio";
+import { DEFAULT_MAP_LAYOUT, type MapLayout } from "../../data/mapLayout";
 import { InputController } from "./InputController";
 import {
   MAP_SIZE,
@@ -57,6 +58,7 @@ export class PortfolioGame {
   private nearbyStationId: StationId | null = null;
   private reducedMotion = false;
   private readonly frameTextures = new Map<string, Texture>();
+  private readonly layout: MapLayout;
 
   constructor(
     private readonly events: {
@@ -68,11 +70,17 @@ export class PortfolioGame {
     options?: {
       initialTile?: { x: number; y: number };
       reducedMotion?: boolean;
+      layout?: MapLayout;
     },
   ) {
-    if (options?.initialTile && canEnterTile(options.initialTile.x, options.initialTile.y)) {
-      this.x = options.initialTile.x * TILE_SIZE;
-      this.y = options.initialTile.y * TILE_SIZE;
+    this.layout = options?.layout ?? DEFAULT_MAP_LAYOUT;
+    const initialTile = options?.initialTile ?? this.layout.spawn;
+    if (canEnterTile(initialTile.x, initialTile.y, this.layout)) {
+      this.x = initialTile.x * TILE_SIZE;
+      this.y = initialTile.y * TILE_SIZE;
+    } else {
+      this.x = this.layout.spawn.x * TILE_SIZE;
+      this.y = this.layout.spawn.y * TILE_SIZE;
     }
     this.reducedMotion = options?.reducedMotion ?? false;
   }
@@ -116,8 +124,9 @@ export class PortfolioGame {
       frame: new Rectangle(0, 0, 32, 32),
     });
     for (const station of PORTFOLIO_STATIONS) {
+      const tile = this.layout.stations[station.id];
       const marker = new Sprite(markerTexture);
-      marker.position.set(station.tile.x * TILE_SIZE - 8, station.tile.y * TILE_SIZE - 24);
+      marker.position.set(tile.x * TILE_SIZE - 8, tile.y * TILE_SIZE - 24);
       marker.alpha = 0.9;
       this.markers.push(marker);
       this.room.addChild(marker);
@@ -225,14 +234,14 @@ export class PortfolioGame {
   private findNearbyStation() {
     const tileX = Math.round(this.x / TILE_SIZE);
     const tileY = Math.round(this.y / TILE_SIZE);
-    return findNearbyStationId(tileX, tileY);
+    return findNearbyStationId(tileX, tileY, this.layout);
   }
 
   private tryMove(direction: Direction) {
     const offset = directionVector[direction];
     const tileX = Math.round(this.x / TILE_SIZE) + offset.x;
     const tileY = Math.round(this.y / TILE_SIZE) + offset.y;
-    if (!canEnterTile(tileX, tileY)) return;
+    if (!canEnterTile(tileX, tileY, this.layout)) return;
 
     if (direction === "left" || direction === "right") this.facing = direction;
     this.movement = {

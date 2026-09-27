@@ -1,9 +1,12 @@
 import { describe, expect, it } from "vitest";
 import { PORTFOLIO_STATIONS } from "../../data/portfolio";
+import { DEFAULT_MAP_LAYOUT } from "../../data/mapLayout";
 import { canEnterTile, directionVector, findNearbyStationId } from "./world";
 
 describe("portfolio world", () => {
   it("keeps the player inside the room boundaries", () => {
+    expect(canEnterTile(-1, 3)).toBe(false);
+    expect(canEnterTile(14, 3)).toBe(false);
     expect(canEnterTile(1, 3)).toBe(false);
     expect(canEnterTile(12, 11)).toBe(false);
     expect(canEnterTile(2, 3)).toBe(true);
@@ -20,11 +23,12 @@ describe("portfolio world", () => {
 
   it("makes every story reachable from an adjacent walkable tile", () => {
     for (const station of PORTFOLIO_STATIONS) {
+      const stationTile = DEFAULT_MAP_LAYOUT.stations[station.id];
       const adjacent = [
-        { x: station.tile.x - 1, y: station.tile.y },
-        { x: station.tile.x + 1, y: station.tile.y },
-        { x: station.tile.x, y: station.tile.y - 1 },
-        { x: station.tile.x, y: station.tile.y + 1 },
+        { x: stationTile.x - 1, y: stationTile.y },
+        { x: stationTile.x + 1, y: stationTile.y },
+        { x: stationTile.x, y: stationTile.y - 1 },
+        { x: stationTile.x, y: stationTile.y + 1 },
       ].filter((tile) => canEnterTile(tile.x, tile.y));
 
       expect(adjacent.length).toBeGreaterThan(0);
