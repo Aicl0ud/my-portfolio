@@ -1,66 +1,48 @@
+import dynamic from "next/dynamic";
 import Head from "next/head";
-import { useEffect } from "react";
-import Overworld from "../components/overworld";
-import Maps from "../components/Maps";
-import Keyboard from "../components/Keyboard";
 
-const Index = () => {
-  useEffect(() => {
-    Maps();
-    const overworld = new Overworld({
-      element: document.querySelector(".game-container"),
-    });
-    overworld.init();
-  }, []);
+const SceneCanvas = dynamic(() => import("../components/scene/SceneCanvas"), {
+  ssr: false,
+  loading: () => <div className="scene-loading">Building the room…</div>,
+});
 
+export default function Home() {
   return (
-    <div className="">
+    <div className="app-shell">
       <Head>
-        <title>Create Next App</title>
-        <link rel="icon" href="/favicon.ico" />
+        <title>Kiw · Interactive portfolio</title>
+        <meta
+          name="description"
+          content="Explore Kiw's software engineering work in an interactive 3D portfolio."
+        />
       </Head>
 
-      <main className="">
-        <div className="game-container relative">
-          <canvas
-            className="game-canvas bg-[#353540]"
-            width={"320"}
-            height={"180"}
-          ></canvas>
-          <div
-            id="position"
-            className="absolute bottom-0 right-0 mr-1 text-white"
-          ></div>
+      <header className="topbar">
+        <a className="brand" href="#top" aria-label="Kiw portfolio home">
+          <span className="brand-mark">K</span>
+          <span>
+            <strong>Kiw</strong>
+            <small>Software engineer</small>
+          </span>
+        </a>
+        <span className="status-chip">
+          <span aria-hidden="true" /> Three.js room
+        </span>
+      </header>
 
-          <div className="box wooden transition transition-all duration-500">
-            <div className="content">
-              <div
-                className="absolute top-0 right-0 font-bold text-red-600 cursor-pointer"
-                onClick={(e) => {
-                  document.querySelector(".box").classList.add("opacity-0");
-                }}
-              >
-                X
-              </div>
-              <div className="title">Get started</div>
-              <hr className="mt-1 mb-2" />
-              <div className="msg">
-                <div className="flex items-center gap-0.5">
-                  use <Keyboard text={"w,a,s,d"}></Keyboard> or{" "}
-                  <Keyboard text={"↑,↓,→,←"}></Keyboard> to move{" "}
-                </div>
-                <div className="flex items-center gap-0.5">
-                  use <Keyboard text={"z,x"}></Keyboard> or{" "}
-                  <Keyboard word={" ↵ ,spacebar"}></Keyboard> to interact{" "}
-                </div>
-                <div>Then go 3 red marks 🔻 to know me more</div>
-              </div>
-            </div>
-          </div>
+      <main id="top" className="scene-shell">
+        <SceneCanvas />
+        <div className="scene-intro" aria-live="polite">
+          <p className="eyebrow">Welcome to my space</p>
+          <h1>An explorable portfolio, rebuilt in 3D.</h1>
+          <p>The room is ready. Movement and interactive stories arrive next.</p>
         </div>
       </main>
+
+      <footer className="scene-footer">
+        <span>Bangkok, Thailand</span>
+        <span className="footer-hint">Isometric preview · v2</span>
+      </footer>
     </div>
   );
-};
-
-export default Index;
+}
