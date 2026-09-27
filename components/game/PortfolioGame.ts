@@ -14,8 +14,9 @@ import {
   TILE_SIZE,
   VIEWPORT_HEIGHT,
   VIEWPORT_WIDTH,
-  WALLS,
+  canEnterTile,
   directionVector,
+  findNearbyStationId,
   type Direction,
 } from "./world";
 
@@ -69,7 +70,7 @@ export class PortfolioGame {
       reducedMotion?: boolean;
     },
   ) {
-    if (options?.initialTile && !WALLS.has(`${options.initialTile.x},${options.initialTile.y}`)) {
+    if (options?.initialTile && canEnterTile(options.initialTile.x, options.initialTile.y)) {
       this.x = options.initialTile.x * TILE_SIZE;
       this.y = options.initialTile.y * TILE_SIZE;
     }
@@ -135,6 +136,7 @@ export class PortfolioGame {
 
     this.input.start();
     this.app.ticker.add(this.update);
+    document.addEventListener("visibilitychange", this.handleVisibility);
   }
 
   setDirection(direction: Direction, pressed: boolean) {
@@ -157,10 +159,13 @@ export class PortfolioGame {
   destroy() {
     this.destroyed = true;
     this.input.destroy();
-    this.app.ticker.remove(this.update);
+    document.removeEventListener("visibilitychange", this.handleVisibility);
     this.frameTextures.forEach((texture) => texture.destroy(false));
     this.frameTextures.clear();
-    if (this.initialized) this.app.destroy(true, { children: true });
+    if (this.initialized) {
+      this.app.ticker.remove(this.update);
+      this.app.destroy(true, { children: true });
+    }
   }
 
   private update = (ticker: Ticker) => {
@@ -192,8 +197,9 @@ export class PortfolioGame {
         this.events.onTileChange(tile);
         this.events.onSound("step");
       }
-    } else if (this.input.direction) {
-      this.tryMove(this.input.direction);
+    } else {
+      const direction = this.input.direction;
+      if (direction) this.tryMove(direction);
     }
 
     const nearbyStation = this.findNearbyStation();
@@ -208,22 +214,23 @@ export class PortfolioGame {
     this.syncScene();
   };
 
+  private handleVisibility = () => {
+    if (!this.initialized || this.destroyed) return;
+    if (document.hidden) this.app.ticker.stop();
+    else this.app.ticker.start();
+  };
+
   private findNearbyStation() {
     const tileX = Math.round(this.x / TILE_SIZE);
     const tileY = Math.round(this.y / TILE_SIZE);
-    return (
-      PORTFOLIO_STATIONS.find(
-        (station) =>
-          Math.abs(station.tile.x - tileX) + Math.abs(station.tile.y - tileY) === 1,
-      )?.id ?? null
-    );
+    return findNearbyStationId(tileX, tileY);
   }
 
   private tryMove(direction: Direction) {
     const offset = directionVector[direction];
     const tileX = Math.round(this.x / TILE_SIZE) + offset.x;
     const tileY = Math.round(this.y / TILE_SIZE) + offset.y;
-    if (WALLS.has(`${tileX},${tileY}`)) return;
+    if (!canEnterTile(tileX, tileY)) return;
 
     if (direction === "left" || direction === "right") this.facing = direction;
     this.movement = {
