@@ -115,7 +115,7 @@ function Station({ position, color }: { position: [number, number, number]; colo
 
 export function PortfolioRoom() {
   return (
-    <group rotation={[0, -0.08, 0]}>
+    <group>
       <mesh receiveShadow rotation={[-Math.PI / 2, 0, 0]}>
         <planeGeometry args={[14, 11]} />
         <meshStandardMaterial color="#705b48" roughness={0.95} />

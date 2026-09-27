@@ -1,5 +1,7 @@
 import { Canvas } from "@react-three/fiber";
 
+import { CameraRig } from "./CameraRig";
+import { Player } from "./Player";
 import { PortfolioRoom } from "./PortfolioRoom";
 
 export default function SceneCanvas() {
@@ -10,7 +12,7 @@ export default function SceneCanvas() {
       gl={{ antialias: true, powerPreference: "high-performance" }}
       orthographic
       camera={{ position: [10, 11, 10], zoom: 58, near: 0.1, far: 100 }}
-      shadows
+      shadows="basic"
       onCreated={({ camera }) => camera.lookAt(0, 0, 0)}
     >
       <color attach="background" args={["#15131b"]} />
@@ -22,7 +24,9 @@ export default function SceneCanvas() {
         position={[6, 12, 7]}
         shadow-mapSize={[1024, 1024]}
       />
+      <CameraRig />
       <PortfolioRoom />
+      <Player />
     </Canvas>
   );
 }

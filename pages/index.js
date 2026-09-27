@@ -34,8 +34,15 @@ export default function Home() {
         <SceneCanvas />
         <div className="scene-intro" aria-live="polite">
           <p className="eyebrow">Welcome to my space</p>
-          <h1>An explorable portfolio, rebuilt in 3D.</h1>
-          <p>The room is ready. Movement and interactive stories arrive next.</p>
+          <h1>Walk through my work in 3D.</h1>
+          <p>Move with WASD or the arrow keys. The glowing stations hold each story.</p>
+        </div>
+        <div className="controls-hint" aria-label="Keyboard controls">
+          <kbd>W</kbd>
+          <kbd>A</kbd>
+          <kbd>S</kbd>
+          <kbd>D</kbd>
+          <span>Move</span>
         </div>
       </main>
 

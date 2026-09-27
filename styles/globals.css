@@ -65,6 +65,40 @@ a {
   z-index: 10;
 }
 
+.controls-hint {
+  align-items: center;
+  backdrop-filter: blur(12px);
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 0.8rem;
+  bottom: 5rem;
+  display: flex;
+  gap: 0.35rem;
+  padding: 0.55rem 0.7rem;
+  position: absolute;
+  right: clamp(1rem, 4vw, 3rem);
+}
+
+.controls-hint kbd {
+  align-items: center;
+  background: rgba(255, 255, 255, 0.09);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-bottom-width: 3px;
+  border-radius: 0.32rem;
+  display: inline-flex;
+  font-family: inherit;
+  font-size: 0.62rem;
+  height: 1.7rem;
+  justify-content: center;
+  width: 1.7rem;
+}
+
+.controls-hint span {
+  color: var(--muted);
+  font-size: 0.68rem;
+  margin-left: 0.25rem;
+}
+
 .topbar {
   top: 0;
 }
@@ -204,6 +238,10 @@ a {
 
   .scene-shell {
     min-height: 34rem;
+  }
+
+  .controls-hint {
+    display: none;
   }
 }
 
