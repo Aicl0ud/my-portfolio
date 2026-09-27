@@ -39,6 +39,27 @@ a {
   color: inherit;
 }
 
+.skip-link {
+  background: var(--accent);
+  border: 0;
+  border-radius: 0 0 0.6rem 0.6rem;
+  color: #211b26;
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  left: 1rem;
+  padding: 0.75rem 1rem;
+  position: fixed;
+  top: 0;
+  transform: translateY(-120%);
+  transition: transform 160ms ease;
+  z-index: 100;
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
 button,
 a {
   -webkit-tap-highlight-color: transparent;
@@ -454,6 +475,38 @@ a {
   position: absolute !important;
 }
 
+.scene-error,
+.noscript-portfolio {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  inset: 0;
+  justify-content: center;
+  padding: 2rem;
+  position: absolute;
+  text-align: center;
+  z-index: 20;
+}
+
+.scene-error button,
+.noscript-portfolio a {
+  background: var(--accent);
+  border: 0;
+  border-radius: 999px;
+  color: #211b26;
+  font: inherit;
+  font-weight: 700;
+  padding: 0.75rem 1rem;
+  text-decoration: none;
+}
+
+.noscript-portfolio {
+  background: #15131b;
+  min-height: 100svh;
+  position: fixed;
+}
+
 .scene-loading {
   align-items: center;
   color: var(--muted);
@@ -568,6 +621,7 @@ a {
   *::before,
   *::after {
     scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
   }
 }
 

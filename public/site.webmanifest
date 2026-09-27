@@ -1,0 +1,10 @@
+{
+  "name": "Kiw · Interactive portfolio",
+  "short_name": "Kiw Portfolio",
+  "description": "An interactive 3D software engineering portfolio.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#15131b",
+  "theme_color": "#15131b",
+  "icons": [{ "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml" }]
+}

@@ -4,6 +4,7 @@ import type { Group } from "three";
 
 import { useKeyboardMovement } from "../../hooks/useKeyboardMovement";
 import { useInteractionKeys } from "../../hooks/useInteractionKeys";
+import { useReducedMotion } from "../../hooks/useReducedMotion";
 import { findNearbyStation } from "../../lib/stations";
 import { moveWithCollisions } from "../../lib/world";
 import { useGameStore } from "../../store/game";
@@ -13,6 +14,7 @@ const WALK_SPEED = 3.15;
 export function Player() {
   const group = useRef<Group>(null);
   const elapsed = useRef(0);
+  const reducedMotion = useReducedMotion();
   useKeyboardMovement();
   useInteractionKeys();
 
@@ -42,7 +44,7 @@ export function Player() {
     if (nearbyStationId !== state.nearbyStationId) state.setNearbyStation(nearbyStationId);
 
     elapsed.current += delta;
-    group.current.position.y = moving ? Math.abs(Math.sin(elapsed.current * 9)) * 0.08 : 0;
+    group.current.position.y = moving && !reducedMotion ? Math.abs(Math.sin(elapsed.current * 9)) * 0.08 : 0;
   });
 
   const initialPosition = useGameStore.getState().playerPosition;

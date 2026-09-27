@@ -4,11 +4,13 @@ import { CameraRig } from "./CameraRig";
 import { InteractiveStations } from "./InteractiveStations";
 import { Player } from "./Player";
 import { PortfolioRoom } from "./PortfolioRoom";
+import { RenderLifecycle } from "./RenderLifecycle";
 
 export default function SceneCanvas() {
   return (
     <Canvas
       className="scene-canvas"
+      aria-label="Interactive 3D portfolio room"
       dpr={[1, 1.5]}
       gl={{ antialias: true, powerPreference: "high-performance" }}
       orthographic
@@ -26,6 +28,7 @@ export default function SceneCanvas() {
         shadow-mapSize={[1024, 1024]}
       />
       <CameraRig />
+      <RenderLifecycle />
       <PortfolioRoom />
       <InteractiveStations />
       <Player />

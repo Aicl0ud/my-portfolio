@@ -4,16 +4,18 @@ import { useRef } from "react";
 import type { Group } from "three";
 
 import { PORTFOLIO_STATIONS, type PortfolioStation } from "../../data/portfolio";
+import { useReducedMotion } from "../../hooks/useReducedMotion";
 import { useGameStore } from "../../store/game";
 
 function StationMarker({ station }: { station: PortfolioStation }) {
   const group = useRef<Group>(null);
+  const reducedMotion = useReducedMotion();
   const nearby = useGameStore((state) => state.nearbyStationId === station.id);
   const visited = useGameStore((state) => state.visitedStationIds.includes(station.id));
 
   useFrame(({ clock }) => {
     if (!group.current) return;
-    const pulse = 1 + Math.sin(clock.elapsedTime * 2.4) * 0.06;
+    const pulse = reducedMotion ? 1 : 1 + Math.sin(clock.elapsedTime * 2.4) * 0.06;
     const scale = nearby ? 1.16 : pulse;
     group.current.scale.setScalar(scale);
   });

@@ -5,11 +5,24 @@ import { useState } from "react";
 import { AccessiblePortfolio } from "../components/ui/AccessiblePortfolio";
 import { MobileControls } from "../components/ui/MobileControls";
 import { PortfolioOverlay } from "../components/ui/PortfolioOverlay";
+import { SceneErrorBoundary } from "../components/ui/SceneErrorBoundary";
 
 const SceneCanvas = dynamic(() => import("../components/scene/SceneCanvas"), {
   ssr: false,
   loading: () => <div className="scene-loading">Building the room…</div>,
 });
+
+const SITE_URL = "https://my-portfolio-aicl0ud.vercel.app";
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: "Teerasit Wongpa",
+  alternateName: "Kiw",
+  jobTitle: "Software Engineer",
+  address: { "@type": "PostalAddress", addressLocality: "Bangkok", addressCountry: "TH" },
+  url: SITE_URL,
+  sameAs: ["https://github.com/Aicl0ud", "https://www.linkedin.com/in/teerasit-wongpa/"],
+};
 
 export default function Home() {
   const [introVisible, setIntroVisible] = useState(true);
@@ -17,13 +30,41 @@ export default function Home() {
 
   return (
     <div className={portfolioVisible ? "app-shell reading-mode" : "app-shell"}>
+      <button className="skip-link" type="button" onClick={() => setPortfolioVisible(true)}>
+        Skip the 3D room and view portfolio
+      </button>
       <Head>
         <title>Kiw · Interactive portfolio</title>
         <meta
           name="description"
           content="Explore Kiw's software engineering work in an interactive 3D portfolio."
         />
+        <link rel="canonical" href={SITE_URL} />
+        <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+        <link rel="manifest" href="/site.webmanifest" />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="Kiw · Interactive portfolio" />
+        <meta property="og:description" content="Explore software engineering work in an interactive 3D room—or read the accessible portfolio." />
+        <meta property="og:url" content={SITE_URL} />
+        <meta property="og:image" content={`${SITE_URL}/og-image.png`} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Kiw · Interactive portfolio" />
+        <meta name="twitter:description" content="An interactive 3D software engineering portfolio." />
+        <meta name="twitter:image" content={`${SITE_URL}/og-image.png`} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }} />
       </Head>
+
+      <noscript>
+        <section className="noscript-portfolio">
+          <h1>Teerasit “Kiw” Wongpa</h1>
+          <p>Software engineer based in Bangkok, Thailand.</p>
+          <a href="mailto:teerasit.won@gmail.com">teerasit.won@gmail.com</a>
+          <a href="https://github.com/Aicl0ud">GitHub</a>
+          <a href="https://www.linkedin.com/in/teerasit-wongpa/">LinkedIn</a>
+        </section>
+      </noscript>
 
       <header className="topbar">
         <a className="brand" href="#top" aria-label="Kiw portfolio home">
@@ -44,7 +85,9 @@ export default function Home() {
         <AccessiblePortfolio onReturn={() => setPortfolioVisible(false)} />
       ) : (
         <main id="top" className="scene-shell">
-          <SceneCanvas />
+          <SceneErrorBoundary onFallback={() => setPortfolioVisible(true)}>
+            <SceneCanvas />
+          </SceneErrorBoundary>
           <PortfolioOverlay />
           <MobileControls />
           {introVisible ? (

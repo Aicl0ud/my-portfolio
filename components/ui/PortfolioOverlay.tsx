@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, type KeyboardEvent } from "react";
 
 import {
   CONTACTS,
@@ -84,10 +84,33 @@ export function PortfolioOverlay() {
   const closeStation = useGameStore((state) => state.closeStation);
   const openStation = useGameStore((state) => state.openStation);
   const closeButton = useRef<HTMLButtonElement>(null);
+  const previousFocus = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
-    if (activeStationId) closeButton.current?.focus();
+    if (activeStationId) {
+      previousFocus.current = document.activeElement as HTMLElement;
+      closeButton.current?.focus();
+    } else {
+      previousFocus.current?.focus();
+      previousFocus.current = null;
+    }
   }, [activeStationId]);
+
+  const trapDialogFocus = (event: KeyboardEvent<HTMLElement>) => {
+    if (event.key !== "Tab") return;
+    const focusable = Array.from(
+      event.currentTarget.querySelectorAll<HTMLElement>('button, a[href], [tabindex]:not([tabindex="-1"])'),
+    );
+    const first = focusable[0];
+    const last = focusable.at(-1);
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last?.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first?.focus();
+    }
+  };
 
   const station = PORTFOLIO_STATIONS.find((item) => item.id === activeStationId);
   const nearbyStation = PORTFOLIO_STATIONS.find((item) => item.id === nearbyStationId);
@@ -108,7 +131,7 @@ export function PortfolioOverlay() {
 
       {activeStationId && station ? (
         <div className="panel-backdrop" role="presentation" onMouseDown={(event) => event.target === event.currentTarget && closeStation()}>
-          <section className="story-panel" role="dialog" aria-modal="true" aria-labelledby="story-title">
+          <section className="story-panel" role="dialog" aria-modal="true" aria-labelledby="story-title" onKeyDown={trapDialogFocus}>
             <button ref={closeButton} className="panel-close" type="button" onClick={closeStation} aria-label="Close story">×</button>
             <p className="eyebrow">Story {visitedStationIds.indexOf(activeStationId) + 1} of {PORTFOLIO_STATIONS.length}</p>
             <h2 id="story-title">{station.label}</h2>
