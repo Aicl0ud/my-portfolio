@@ -1,4 +1,3 @@
-import React, { Component } from "react";
 import GameObject from "../components/GameObject.js";
 class Person extends GameObject {
   constructor(config) {
