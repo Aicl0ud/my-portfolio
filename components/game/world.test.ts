@@ -41,4 +41,17 @@ describe("portfolio world", () => {
   it("does not trigger a story from a distant tile", () => {
     expect(findNearbyStationId(2, 3)).toBeNull();
   });
+
+  it("uses solid sprites as collision while rugs stay walkable", () => {
+    const withSprites = {
+      ...DEFAULT_MAP_LAYOUT,
+      sprites: [
+        { instanceId: "crate-1", spriteId: "crate" as const, x: 5, y: 5 },
+        { instanceId: "rug-1", spriteId: "rug" as const, x: 6, y: 5 },
+      ],
+    };
+
+    expect(canEnterTile(5, 5, withSprites)).toBe(false);
+    expect(canEnterTile(6, 5, withSprites)).toBe(true);
+  });
 });

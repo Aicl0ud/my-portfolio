@@ -5,6 +5,7 @@ import {
   tileKey,
   type MapLayout,
 } from "../../data/mapLayout";
+import { isSpriteBlockingTile } from "../../data/mapSprites";
 
 export const TILE_SIZE = 16;
 export const VIEWPORT_WIDTH = 256;
@@ -27,7 +28,8 @@ export function canEnterTile(
 ) {
   return (
     isTileInBounds({ x, y }, layout) &&
-    !layout.walls.includes(tileKey({ x, y }))
+    !layout.walls.includes(tileKey({ x, y })) &&
+    !isSpriteBlockingTile(layout.sprites, { x, y })
   );
 }
 

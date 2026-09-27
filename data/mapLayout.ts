@@ -1,4 +1,11 @@
 import { type StationId } from "./portfolio";
+import {
+  getMapSprite,
+  getSpriteTiles,
+  isMapSpriteId,
+  isSpriteBlockingTile,
+  type PlacedMapSprite,
+} from "./mapSprites";
 
 export const MAP_COLUMNS = 14;
 export const MAP_ROWS = 14;
@@ -13,6 +20,7 @@ export type MapLayout = {
   spawn: TilePosition;
   walls: string[];
   stations: Record<StationId, TilePosition>;
+  sprites: PlacedMapSprite[];
 };
 
 const wallTiles: Array<[number, number]> = [
@@ -53,6 +61,7 @@ export const DEFAULT_MAP_LAYOUT: MapLayout = {
     projects: { x: 8, y: 7 },
     contact: { x: 4, y: 10 },
   },
+  sprites: [],
 };
 
 const STATION_IDS: StationId[] = ["about", "experience", "projects", "contact"];
@@ -92,7 +101,27 @@ export function normalizeMapLayout(value: unknown): MapLayout | null {
     spawn,
     walls,
     stations: { ...DEFAULT_MAP_LAYOUT.stations },
+    sprites: [],
   };
+
+  if (candidate.sprites !== undefined) {
+    if (!Array.isArray(candidate.sprites)) return null;
+    for (const rawSprite of candidate.sprites) {
+      if (!rawSprite || typeof rawSprite !== "object") return null;
+      const sprite = rawSprite as Partial<PlacedMapSprite>;
+      if (
+        typeof sprite.instanceId !== "string" ||
+        !isMapSpriteId(sprite.spriteId) ||
+        !Number.isInteger(sprite.x) ||
+        !Number.isInteger(sprite.y)
+      ) {
+        return null;
+      }
+      const placed = sprite as PlacedMapSprite;
+      if (!getSpriteTiles(placed).every((tile) => isTileInBounds(tile, layout))) return null;
+      layout.sprites.push(placed);
+    }
+  }
 
   for (const id of STATION_IDS) {
     const station = candidate.stations[id];
@@ -104,7 +133,11 @@ export function normalizeMapLayout(value: unknown): MapLayout | null {
     layout.stations[id] = tile;
   }
 
-  if (!isTileInBounds(spawn, layout) || walls.includes(tileKey(spawn))) return null;
+  if (
+    !isTileInBounds(spawn, layout) ||
+    walls.includes(tileKey(spawn)) ||
+    isSpriteBlockingTile(layout.sprites, spawn)
+  ) return null;
   layout.walls = walls.filter((wall) => {
     const [x, y] = wall.split(",").map(Number);
     return isTileInBounds({ x, y }, layout);
@@ -116,7 +149,21 @@ export function getMapLayoutIssues(layout: MapLayout) {
   const issues: string[] = [];
   const walls = new Set(layout.walls);
   const stationTiles = new Map<string, StationId>();
-  if (walls.has(tileKey(layout.spawn))) issues.push("Player spawn cannot be inside a wall.");
+  const occupiedSpriteTiles = new Map<string, string>();
+  if (
+    walls.has(tileKey(layout.spawn)) ||
+    isSpriteBlockingTile(layout.sprites, layout.spawn)
+  ) issues.push("Player spawn cannot be inside a wall or solid sprite.");
+
+  for (const sprite of layout.sprites) {
+    const definition = getMapSprite(sprite.spriteId);
+    for (const tile of getSpriteTiles(sprite)) {
+      const key = tileKey(tile);
+      const existing = occupiedSpriteTiles.get(key);
+      if (existing) issues.push(`${definition.label} overlaps another sprite at ${key}.`);
+      occupiedSpriteTiles.set(key, sprite.instanceId);
+    }
+  }
 
   for (const id of STATION_IDS) {
     const station = layout.stations[id];
@@ -125,6 +172,9 @@ export function getMapLayoutIssues(layout: MapLayout) {
     if (!walls.has(key)) issues.push(`${id} must be placed on a collision tile.`);
     const duplicate = stationTiles.get(key);
     if (duplicate) issues.push(`${id} and ${duplicate} cannot share a tile.`);
+    if (isSpriteBlockingTile(layout.sprites, station)) {
+      issues.push(`${id} cannot share a solid sprite tile.`);
+    }
     stationTiles.set(key, id);
     const adjacent = [
       { x: station.x - 1, y: station.y },
@@ -134,7 +184,10 @@ export function getMapLayoutIssues(layout: MapLayout) {
     ];
     if (
       !adjacent.some(
-        (tile) => isTileInBounds(tile, layout) && !walls.has(tileKey(tile)),
+        (tile) =>
+          isTileInBounds(tile, layout) &&
+          !walls.has(tileKey(tile)) &&
+          !isSpriteBlockingTile(layout.sprites, tile),
       )
     ) {
       issues.push(`${id} needs at least one walkable adjacent tile.`);
