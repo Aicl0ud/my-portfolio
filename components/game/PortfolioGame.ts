@@ -7,6 +7,7 @@ import {
   Texture,
   type Ticker,
 } from "pixi.js";
+import { PORTFOLIO_STATIONS, type StationId } from "../../data/portfolio";
 import { InputController } from "./InputController";
 import {
   MAP_SIZE,
@@ -23,6 +24,7 @@ const ASSETS = {
   ceiling: "/images/maps/bed/top.png",
   player: "/images/characters/player/mPlayer_[human].png",
   shadow: "/images/characters/shadow.png",
+  marker: "/images/objects/red-arrow.png",
 } as const;
 
 const WALK_DURATION = 145;
@@ -49,7 +51,16 @@ export class PortfolioGame {
   private animationElapsed = 0;
   private destroyed = false;
   private initialized = false;
+  private paused = false;
+  private nearbyStationId: StationId | null = null;
   private readonly frameTextures = new Map<string, Texture>();
+
+  constructor(
+    private readonly events: {
+      onNearbyChange: (stationId: StationId | null) => void;
+      onOpenStation: (stationId: StationId) => void;
+    },
+  ) {}
 
   async mount(host: HTMLDivElement) {
     await this.app.init({
@@ -70,20 +81,31 @@ export class PortfolioGame {
     this.app.canvas.setAttribute("aria-label", "An explorable pixel-art portfolio room");
     this.app.canvas.setAttribute("role", "img");
 
-    const [floorTexture, ceilingTexture, playerSheet, shadowTexture] = await Promise.all([
+    const [floorTexture, ceilingTexture, playerSheet, shadowTexture, markerSheet] = await Promise.all([
       Assets.load<Texture>(ASSETS.floor),
       Assets.load<Texture>(ASSETS.ceiling),
       Assets.load<Texture>(ASSETS.player),
       Assets.load<Texture>(ASSETS.shadow),
+      Assets.load<Texture>(ASSETS.marker),
     ]);
     if (this.destroyed) return;
 
-    for (const texture of [floorTexture, ceilingTexture, playerSheet, shadowTexture]) {
+    for (const texture of [floorTexture, ceilingTexture, playerSheet, shadowTexture, markerSheet]) {
       texture.source.scaleMode = "nearest";
     }
     this.playerSheet = playerSheet;
 
     const floor = new Sprite(floorTexture);
+    const markerTexture = new Texture({
+      source: markerSheet.source,
+      frame: new Rectangle(0, 0, 32, 32),
+    });
+    for (const station of PORTFOLIO_STATIONS) {
+      const marker = new Sprite(markerTexture);
+      marker.position.set(station.tile.x * TILE_SIZE - 8, station.tile.y * TILE_SIZE - 24);
+      marker.alpha = 0.9;
+      this.room.addChild(marker);
+    }
     const shadow = new Sprite(shadowTexture);
     shadow.position.set(-8, 6);
     this.playerSprite = new Sprite(this.frameTexture(4, 1));
@@ -91,7 +113,8 @@ export class PortfolioGame {
     this.player.addChild(shadow, this.playerSprite);
 
     const ceiling = new Sprite(ceilingTexture);
-    this.room.addChild(floor, this.player, ceiling);
+    this.room.addChildAt(floor, 0);
+    this.room.addChild(this.player, ceiling);
     this.app.stage.addChild(this.room);
     this.syncScene();
 
@@ -107,6 +130,11 @@ export class PortfolioGame {
     this.input.queueInteraction();
   }
 
+  setPaused(paused: boolean) {
+    this.paused = paused;
+    if (paused) this.input.releaseAll();
+  }
+
   destroy() {
     this.destroyed = true;
     this.input.destroy();
@@ -120,6 +148,8 @@ export class PortfolioGame {
     const delta = Math.min(ticker.deltaMS, 50);
     this.animationElapsed += delta;
 
+    if (this.paused) return;
+
     if (this.movement) {
       this.movement.elapsed += delta;
       const progress = Math.min(1, this.movement.elapsed / WALK_DURATION);
@@ -131,10 +161,27 @@ export class PortfolioGame {
       this.tryMove(this.input.direction);
     }
 
-    // Reserved for portfolio hotspots in the next layer of the stack.
-    this.input.consumeInteraction();
+    const nearbyStation = this.findNearbyStation();
+    if (nearbyStation !== this.nearbyStationId) {
+      this.nearbyStationId = nearbyStation;
+      this.events.onNearbyChange(nearbyStation);
+    }
+    if (this.input.consumeInteraction() && nearbyStation) {
+      this.events.onOpenStation(nearbyStation);
+    }
     this.syncScene();
   };
+
+  private findNearbyStation() {
+    const tileX = Math.round(this.x / TILE_SIZE);
+    const tileY = Math.round(this.y / TILE_SIZE);
+    return (
+      PORTFOLIO_STATIONS.find(
+        (station) =>
+          Math.abs(station.tile.x - tileX) + Math.abs(station.tile.y - tileY) === 1,
+      )?.id ?? null
+    );
+  }
 
   private tryMove(direction: Direction) {
     const offset = directionVector[direction];

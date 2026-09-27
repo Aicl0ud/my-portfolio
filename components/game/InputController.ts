@@ -11,7 +11,7 @@ const KEY_DIRECTIONS: Record<string, Direction> = {
   KeyD: "right",
 };
 
-const INTERACTION_KEYS = new Set(["Space", "Enter", "KeyX", "KeyZ"]);
+const INTERACTION_KEYS = new Set(["Space", "Enter", "KeyE", "KeyX", "KeyZ"]);
 
 export class InputController {
   private held: Direction[] = [];
@@ -47,6 +47,10 @@ export class InputController {
     const queued = this.interactionQueued;
     this.interactionQueued = false;
     return queued;
+  }
+
+  releaseAll() {
+    this.clear();
   }
 
   private onKeyDown = (event: KeyboardEvent) => {

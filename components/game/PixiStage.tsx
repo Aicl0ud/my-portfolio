@@ -1,5 +1,7 @@
-import { useEffect, useRef, useState, type PointerEvent } from "react";
+import { useCallback, useEffect, useRef, useState, type PointerEvent } from "react";
+import { PORTFOLIO_STATIONS, type StationId } from "../../data/portfolio";
 import { PortfolioGame } from "./PortfolioGame";
+import { StoryPanel } from "./StoryPanel";
 import { VIEWPORT_HEIGHT, VIEWPORT_WIDTH, type Direction } from "./world";
 
 function usePixelScale(host: React.RefObject<HTMLDivElement | null>) {
@@ -33,6 +35,9 @@ export default function PixiStage() {
   const canvasRef = useRef<HTMLDivElement>(null);
   const gameRef = useRef<PortfolioGame | null>(null);
   const [status, setStatus] = useState<"loading" | "ready" | "error">("loading");
+  const [nearbyStationId, setNearbyStationId] = useState<StationId | null>(null);
+  const [activeStationId, setActiveStationId] = useState<StationId | null>(null);
+  const [visited, setVisited] = useState<StationId[]>([]);
 
   usePixelScale(hostRef);
 
@@ -41,7 +46,15 @@ export default function PixiStage() {
     if (!canvasHost) return;
 
     let cancelled = false;
-    const game = new PortfolioGame();
+    const game = new PortfolioGame({
+      onNearbyChange: setNearbyStationId,
+      onOpenStation: (stationId) => {
+        setActiveStationId(stationId);
+        setVisited((current) =>
+          current.includes(stationId) ? current : [...current, stationId],
+        );
+      },
+    });
     gameRef.current = game;
     game.mount(canvasHost).then(
       () => !cancelled && setStatus("ready"),
@@ -58,6 +71,12 @@ export default function PixiStage() {
     };
   }, []);
 
+  useEffect(() => {
+    gameRef.current?.setPaused(Boolean(activeStationId));
+  }, [activeStationId]);
+
+  const closeStory = useCallback(() => setActiveStationId(null), []);
+
   const setDirection = (direction: Direction, pressed: boolean) =>
     gameRef.current?.setDirection(direction, pressed);
 
@@ -65,6 +84,8 @@ export default function PixiStage() {
     event.currentTarget.setPointerCapture(event.pointerId);
     setDirection(direction, true);
   };
+
+  const nearbyStation = PORTFOLIO_STATIONS.find((station) => station.id === nearbyStationId);
 
   return (
     <div className="game-shell" ref={hostRef}>
@@ -75,7 +96,29 @@ export default function PixiStage() {
         </div>
       )}
       {status === "ready" && (
-        <div className="touch-controls" aria-label="Game controls">
+        <>
+          <div
+            className="explore-progress"
+            aria-label={`${visited.length} of ${PORTFOLIO_STATIONS.length} stories explored`}
+          >
+            <span>Explore</span>
+            <strong>{visited.length}/{PORTFOLIO_STATIONS.length}</strong>
+            <div>
+              {PORTFOLIO_STATIONS.map((station) => (
+                <i key={station.id} className={visited.includes(station.id) ? "done" : ""} />
+              ))}
+            </div>
+          </div>
+          {nearbyStation && !activeStationId ? (
+            <button
+              className="interaction-prompt"
+              type="button"
+              onClick={() => gameRef.current?.interact()}
+            >
+              <kbd>E</kbd> Explore {nearbyStation.shortLabel}
+            </button>
+          ) : null}
+          <div className="touch-controls" aria-label="Game controls">
           <div className="d-pad">
             {(["up", "left", "down", "right"] as Direction[]).map((direction) => (
               <button
@@ -100,8 +143,12 @@ export default function PixiStage() {
           >
             A
           </button>
-        </div>
+          </div>
+        </>
       )}
+      {activeStationId ? (
+        <StoryPanel stationId={activeStationId} visited={visited} onClose={closeStory} />
+      ) : null}
     </div>
   );
 }
