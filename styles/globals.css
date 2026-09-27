@@ -53,6 +53,10 @@ a {
     #15131b;
 }
 
+.app-shell.reading-mode {
+  overflow: visible;
+}
+
 .topbar,
 .scene-footer {
   align-items: center;
@@ -470,6 +474,29 @@ a {
   position: absolute;
 }
 
+.intro-close {
+  align-items: center;
+  background: transparent;
+  border: 0;
+  color: var(--muted);
+  cursor: pointer;
+  display: inline-flex;
+  font: inherit;
+  font-size: 1.25rem;
+  height: 2rem;
+  justify-content: center;
+  pointer-events: auto;
+  position: absolute;
+  right: 0.65rem;
+  top: 0.65rem;
+  width: 2rem;
+}
+
+.intro-action {
+  margin-top: 1rem;
+  pointer-events: auto;
+}
+
 .scene-intro .eyebrow {
   color: var(--accent);
   font-family: "Nokia Pixel", monospace;
@@ -487,7 +514,7 @@ a {
   max-width: 13ch;
 }
 
-.scene-intro p:last-child {
+.scene-intro > p:not(.eyebrow) {
   color: var(--muted);
   font-size: clamp(0.8rem, 1.4vw, 0.95rem);
   line-height: 1.5;
@@ -541,5 +568,258 @@ a {
   *::before,
   *::after {
     scroll-behavior: auto !important;
+  }
+}
+
+.topbar-actions {
+  align-items: center;
+  display: flex;
+  gap: 0.65rem;
+}
+
+.view-toggle,
+.intro-action {
+  background: var(--accent);
+  border: 0;
+  border-radius: 999px;
+  color: #211b26;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.7rem 1rem;
+}
+
+.view-toggle:focus-visible,
+.intro-action:focus-visible,
+.intro-close:focus-visible,
+.mobile-controls button:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: 3px;
+}
+
+.project-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.project-card {
+  background: rgba(255, 255, 255, 0.035);
+  border: 1px solid var(--line);
+  border-radius: 0.9rem;
+  display: flex;
+  flex-direction: column;
+  padding: 1.2rem;
+}
+
+.project-card h3 {
+  font-size: 1rem;
+  margin: 0;
+}
+
+.project-card > p {
+  color: var(--muted);
+  flex: 1;
+  font-size: 0.8rem;
+  line-height: 1.55;
+  margin: 0.65rem 0 0;
+}
+
+.project-links {
+  display: flex;
+  gap: 0.8rem;
+  margin-top: 1rem;
+}
+
+.project-links a {
+  color: var(--accent);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-underline-offset: 0.2rem;
+}
+
+.mobile-controls {
+  display: none;
+}
+
+.portfolio-page {
+  margin: 0 auto;
+  max-width: 74rem;
+  padding: 9rem clamp(1.2rem, 5vw, 4rem) 5rem;
+}
+
+.portfolio-hero {
+  min-height: min(42rem, 74svh);
+  padding: clamp(2rem, 9vw, 6rem) 0;
+}
+
+.portfolio-hero .eyebrow {
+  color: var(--accent);
+  font-family: "Nokia Pixel", monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.portfolio-hero h1 {
+  font-size: clamp(3rem, 11vw, 8rem);
+  letter-spacing: -0.07em;
+  line-height: 0.86;
+  margin: 1.2rem 0;
+  max-width: 9ch;
+}
+
+.portfolio-hero > p:not(.eyebrow) {
+  color: var(--muted);
+  font-size: clamp(1rem, 2vw, 1.3rem);
+  line-height: 1.6;
+  max-width: 40rem;
+}
+
+.portfolio-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  margin-top: 2rem;
+}
+
+.portfolio-actions a,
+.portfolio-actions button {
+  border-radius: 999px;
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 0.8rem 1.1rem;
+  text-decoration: none;
+}
+
+.portfolio-actions a {
+  background: var(--accent);
+  color: #211b26;
+}
+
+.portfolio-actions button {
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--ink);
+}
+
+.portfolio-section {
+  border-top: 1px solid var(--line);
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: 4rem 1fr;
+  padding: clamp(3rem, 8vw, 6rem) 0;
+}
+
+.section-index {
+  color: var(--accent);
+  font-family: "Nokia Pixel", monospace;
+  font-size: 0.72rem;
+  margin: 0.4rem 0 0;
+}
+
+.portfolio-section h2 {
+  font-size: clamp(2rem, 6vw, 4rem);
+  letter-spacing: -0.05em;
+  line-height: 1;
+  margin: 0 0 2rem;
+}
+
+.portfolio-section > div > p {
+  color: var(--muted);
+  font-size: 1rem;
+  line-height: 1.7;
+  max-width: 44rem;
+}
+
+.portfolio-timeline {
+  max-width: 48rem;
+}
+
+.portfolio-contact {
+  max-width: 42rem;
+}
+
+@media (max-width: 640px) {
+  .scene-intro {
+    bottom: 8.5rem;
+  }
+
+  .project-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .compact-project-grid {
+    max-height: 52svh;
+    overflow: auto;
+  }
+
+  .portfolio-page {
+    padding-top: 7rem;
+  }
+
+  .portfolio-section {
+    gap: 0.8rem;
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 900px), (pointer: coarse) {
+  .mobile-controls {
+    align-items: flex-end;
+    bottom: 1rem;
+    display: flex;
+    justify-content: space-between;
+    left: 1rem;
+    pointer-events: none;
+    position: absolute;
+    right: 1rem;
+    z-index: 18;
+  }
+
+  .d-pad {
+    display: grid;
+    gap: 0.2rem;
+    grid-template-areas: ". up ." "left down right";
+    grid-template-columns: repeat(3, 2.8rem);
+  }
+
+  .mobile-controls button {
+    background: rgba(25, 22, 31, 0.78);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    color: var(--ink);
+    pointer-events: auto;
+    touch-action: none;
+  }
+
+  .d-pad button {
+    border-radius: 0.65rem;
+    font-size: 1rem;
+    height: 2.8rem;
+    width: 2.8rem;
+  }
+
+  .d-pad .up { grid-area: up; }
+  .d-pad .left { grid-area: left; }
+  .d-pad .down { grid-area: down; }
+  .d-pad .right { grid-area: right; }
+
+  .action-button {
+    border-radius: 50%;
+    font: inherit;
+    font-size: 0.7rem;
+    height: 4.2rem;
+    width: 4.2rem;
+  }
+
+  .action-button:disabled {
+    opacity: 0.42;
+  }
+
+  .interaction-prompt {
+    bottom: 7.7rem;
   }
 }

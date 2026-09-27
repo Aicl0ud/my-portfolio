@@ -1,4 +1,4 @@
-export type StationId = "about" | "experience" | "contact";
+export type StationId = "about" | "experience" | "projects" | "contact";
 
 export type PortfolioStation = {
   id: StationId;
@@ -22,6 +22,13 @@ export const PORTFOLIO_STATIONS: PortfolioStation[] = [
     shortLabel: "Experience",
     color: "#72d5ac",
     position: { x: 3.65, z: 2.9 },
+  },
+  {
+    id: "projects",
+    label: "Selected projects",
+    shortLabel: "Projects",
+    color: "#f6c453",
+    position: { x: -1.8, z: -2.35 },
   },
   {
     id: "contact",
@@ -66,6 +73,41 @@ export const SKILLS = [
   "Solidity",
   "Rust",
   "Tailwind CSS",
+];
+
+export const PROJECTS = [
+  {
+    name: "EV Charging Calculator",
+    description:
+      "A mobile-ready charging time and cost calculator with 60+ Thai EV models, realistic charging curves, offline support, and Firebase caching.",
+    stack: ["Next.js", "TypeScript", "Firebase", "PWA"],
+    sourceUrl: "https://github.com/Aicl0ud/ev-helper",
+    liveUrl: null,
+  },
+  {
+    name: "Retro Outing 2025",
+    description:
+      "An interactive event experience created for a team retrospective in Pattaya.",
+    stack: ["Next.js", "TypeScript", "Vercel"],
+    sourceUrl: "https://github.com/Aicl0ud/retro-outing-2025",
+    liveUrl: "https://retro-outing-2025.vercel.app",
+  },
+  {
+    name: "NFT Minter on Solana",
+    description:
+      "A TypeScript front end for minting NFTs on Solana, built while exploring web3 product development.",
+    stack: ["TypeScript", "Solana", "Web3"],
+    sourceUrl: "https://github.com/Aicl0ud/nft-minter-on-solana",
+    liveUrl: "https://nft-minter-on-solana.vercel.app",
+  },
+  {
+    name: "My Portfolio",
+    description:
+      "This explorable Three.js portfolio: an experiment in combining product storytelling, accessibility, and a game-like interface.",
+    stack: ["Three.js", "React", "Next.js"],
+    sourceUrl: "https://github.com/Aicl0ud/my-portfolio",
+    liveUrl: null,
+  },
 ];
 
 export const CONTACTS = [

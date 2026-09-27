@@ -5,6 +5,7 @@ import {
   EXPERIENCE,
   PORTFOLIO_STATIONS,
   PROFILE,
+  PROJECTS,
   SKILLS,
   type StationId,
 } from "../../data/portfolio";
@@ -45,6 +46,24 @@ function StationContent({ stationId }: { stationId: StationId }) {
     );
   }
 
+  if (stationId === "projects") {
+    return (
+      <div className="project-grid compact-project-grid">
+        {PROJECTS.map((project) => (
+          <article key={project.name} className="project-card">
+            <h3>{project.name}</h3>
+            <p>{project.description}</p>
+            <div className="tag-list">{project.stack.map((item) => <span key={item}>{item}</span>)}</div>
+            <div className="project-links">
+              <a href={project.sourceUrl} target="_blank" rel="noreferrer">Source</a>
+              {project.liveUrl ? <a href={project.liveUrl} target="_blank" rel="noreferrer">Live</a> : null}
+            </div>
+          </article>
+        ))}
+      </div>
+    );
+  }
+
   return (
     <div className="contact-list">
       <p className="panel-lead">Have a project, role, or idea worth exploring? Let’s talk.</p>
@@ -75,9 +94,9 @@ export function PortfolioOverlay() {
 
   return (
     <>
-      <div className="explore-progress" aria-label={`${visitedStationIds.length} of 3 stories explored`}>
+      <div className="explore-progress" aria-label={`${visitedStationIds.length} of ${PORTFOLIO_STATIONS.length} stories explored`}>
         <span>Explore</span>
-        <strong>{visitedStationIds.length}/3</strong>
+        <strong>{visitedStationIds.length}/{PORTFOLIO_STATIONS.length}</strong>
         <div>{PORTFOLIO_STATIONS.map((item) => <i key={item.id} className={visitedStationIds.includes(item.id) ? "done" : ""} />)}</div>
       </div>
 
@@ -91,7 +110,7 @@ export function PortfolioOverlay() {
         <div className="panel-backdrop" role="presentation" onMouseDown={(event) => event.target === event.currentTarget && closeStation()}>
           <section className="story-panel" role="dialog" aria-modal="true" aria-labelledby="story-title">
             <button ref={closeButton} className="panel-close" type="button" onClick={closeStation} aria-label="Close story">×</button>
-            <p className="eyebrow">Story {visitedStationIds.indexOf(activeStationId) + 1} of 3</p>
+            <p className="eyebrow">Story {visitedStationIds.indexOf(activeStationId) + 1} of {PORTFOLIO_STATIONS.length}</p>
             <h2 id="story-title">{station.label}</h2>
             <StationContent stationId={activeStationId} />
             <p className="panel-shortcut">Press Esc to close</p>
