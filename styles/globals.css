@@ -91,6 +91,54 @@ main {
   font-size: 12px;
 }
 
+.touch-controls {
+  position: fixed;
+  inset: auto 18px 18px;
+  z-index: 3;
+  display: none;
+  align-items: end;
+  justify-content: space-between;
+  pointer-events: none;
+}
+
+.d-pad {
+  display: grid;
+  grid-template: repeat(3, 42px) / repeat(3, 42px);
+}
+
+.control {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  border: 2px solid #d9c49a;
+  border-radius: 6px;
+  background: rgb(63 40 50 / 88%);
+  color: #fff8dc;
+  box-shadow: 0 3px 0 #21171c;
+  pointer-events: auto;
+  touch-action: none;
+  user-select: none;
+}
+
+.control:active {
+  translate: 0 2px;
+  box-shadow: 0 1px 0 #21171c;
+}
+
+.control-up { grid-area: 1 / 2; }
+.control-left { grid-area: 2 / 1; }
+.control-down { grid-area: 2 / 2; }
+.control-right { grid-area: 2 / 3; }
+
+.action-button {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  font-size: 18px;
+}
+
 .sr-only {
   position: absolute;
   width: 1px;
@@ -106,5 +154,11 @@ main {
 @media (max-height: 360px) {
   main {
     padding-block: 8px;
+  }
+}
+
+@media (hover: none), (pointer: coarse) {
+  .touch-controls {
+    display: flex;
   }
 }
