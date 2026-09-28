@@ -1,17 +1,12 @@
-import React, { Component } from "react";
-import GameObject from "../components/GameObject.js";
+import { Component } from "react";
 import OverworldMap from "../components/OverworldMap.js";
 import DirectionInput from "../components/DirectionInput.js";
-import utils from "../components/utils.js";
 
 class Overworld extends Component {
   constructor(props) {
     super(props);
     this.element = props.element;
-    this.canvas = {
-      width: utils.withGrid(320),
-      height: utils.withGrid(180),
-    };
+    this.canvas = { width: 320, height: 180 };
     this.ctx = props.element.querySelector("canvas").getContext("2d");
     this.map = null;
   }

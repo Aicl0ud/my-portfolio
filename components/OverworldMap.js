@@ -1,5 +1,4 @@
-import { Component, useEffect } from "react";
-import { GameObject } from "../components/GameObject.js";
+import { Component } from "react";
 import utils from "./utils";
 
 class OverworldMap extends Component {

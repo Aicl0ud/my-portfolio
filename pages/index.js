@@ -1,22 +1,17 @@
 import Head from "next/head";
-import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Overworld from "../components/overworld";
 import Maps from "../components/Maps";
 import Keyboard from "../components/Keyboard";
 
 const Index = () => {
   useEffect(() => {
-    init();
-  }, []);
-
-  function init() {
     Maps();
     const overworld = new Overworld({
       element: document.querySelector(".game-container"),
     });
     overworld.init();
-  }
+  }, []);
 
   return (
     <div className="">

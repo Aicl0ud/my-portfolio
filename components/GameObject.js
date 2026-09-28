@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import { Component } from "react";
 import Sprite from "../components/Sprite.js";
 class GameObject extends Component {
   constructor(config) {
