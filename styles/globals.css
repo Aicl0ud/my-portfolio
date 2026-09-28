@@ -91,6 +91,254 @@ main {
   font-size: 12px;
 }
 
+.explore-progress {
+  position: fixed;
+  top: 18px;
+  left: 18px;
+  z-index: 4;
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 4px 12px;
+  min-width: 126px;
+  padding: 9px 11px;
+  border: 2px solid #d9c49a;
+  background: rgb(38 27 34 / 92%);
+  color: #fff8dc;
+  font-size: 9px;
+  box-shadow: 0 4px 0 #160f13;
+}
+
+.explore-progress strong {
+  text-align: right;
+}
+
+.explore-progress div {
+  grid-column: 1 / -1;
+  display: flex;
+  gap: 5px;
+}
+
+.explore-progress i {
+  width: 21px;
+  height: 4px;
+  background: #715565;
+}
+
+.explore-progress i.done {
+  background: #f6c453;
+}
+
+.interaction-prompt {
+  position: fixed;
+  left: 50%;
+  bottom: 24px;
+  z-index: 4;
+  padding: 8px 12px;
+  border: 2px solid #d9c49a;
+  border-radius: 4px;
+  background: #3f2832;
+  color: #fff8dc;
+  font-size: 10px;
+  box-shadow: 0 4px 0 #21171c;
+  transform: translateX(-50%);
+  cursor: pointer;
+}
+
+kbd {
+  display: inline-grid;
+  min-width: 18px;
+  min-height: 18px;
+  place-items: center;
+  margin-right: 3px;
+  border: 1px solid #fff8dc;
+  border-radius: 3px;
+  background: #21171c;
+}
+
+.panel-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgb(6 7 11 / 78%);
+  backdrop-filter: blur(5px);
+}
+
+.story-panel {
+  position: relative;
+  width: min(720px, 100%);
+  max-height: min(680px, calc(100dvh - 40px));
+  overflow: auto;
+  padding: clamp(22px, 5vw, 44px);
+  border: 12px solid transparent;
+  border-image: url("/images/wooden-gui.png") 10 stretch;
+  background: #3f2832;
+  color: #fff8dc;
+  box-shadow: 0 20px 80px rgb(0 0 0 / 72%);
+  image-rendering: pixelated;
+}
+
+.story-panel h2 {
+  max-width: calc(100% - 36px);
+  margin: 4px 0 22px;
+  color: #fff;
+  font-size: clamp(21px, 4vw, 34px);
+  line-height: 1.1;
+}
+
+.story-panel h3 {
+  margin: 5px 0 7px;
+  color: #fff;
+  font-size: 13px;
+}
+
+.story-panel p,
+.story-panel dd,
+.story-panel span {
+  line-height: 1.65;
+}
+
+.eyebrow,
+.panel-shortcut {
+  color: #d9c49a;
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+.panel-lead {
+  font-size: 14px;
+}
+
+.panel-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 34px;
+  height: 34px;
+  border: 2px solid #d9c49a;
+  border-radius: 3px;
+  background: #21171c;
+  color: #fff8dc;
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.profile-facts {
+  display: grid;
+  gap: 10px;
+  margin-block: 22px;
+}
+
+.profile-facts div {
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  gap: 12px;
+}
+
+.profile-facts dt,
+.contact-list span {
+  color: #d9c49a;
+  font-size: 10px;
+}
+
+.profile-facts dd {
+  margin: 0;
+  font-size: 11px;
+}
+
+.tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 14px;
+}
+
+.tag-list span {
+  padding: 5px 7px;
+  border: 1px solid #856879;
+  border-radius: 2px;
+  background: #2c2027;
+  font-size: 8px;
+}
+
+.timeline {
+  display: grid;
+  gap: 18px;
+}
+
+.timeline article {
+  padding-left: 14px;
+  border-left: 3px solid #72d5ac;
+}
+
+.timeline p {
+  margin: 0;
+  color: #d9c49a;
+  font-size: 9px;
+}
+
+.timeline span,
+.project-card p {
+  font-size: 10px;
+}
+
+.project-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.project-card {
+  padding: 14px;
+  border: 1px solid #856879;
+  background: #30222a;
+}
+
+.project-card h3,
+.project-card p {
+  margin-top: 0;
+}
+
+.project-links {
+  display: flex;
+  gap: 14px;
+  margin-top: 12px;
+}
+
+.project-links a,
+.contact-list a {
+  color: #f6c453;
+  font-size: 10px;
+}
+
+.contact-list {
+  display: grid;
+  gap: 8px;
+}
+
+.contact-list a {
+  display: grid;
+  grid-template-columns: 90px minmax(0, 1fr);
+  gap: 12px;
+  padding: 10px;
+  border: 1px solid #856879;
+  color: #fff8dc;
+  text-decoration: none;
+}
+
+.contact-list strong {
+  overflow-wrap: anywhere;
+}
+
+.panel-shortcut {
+  margin: 24px 0 0;
+  text-align: right;
+}
+
 .touch-controls {
   position: fixed;
   inset: auto 18px 18px;
@@ -154,6 +402,22 @@ main {
 @media (max-height: 360px) {
   main {
     padding-block: 8px;
+  }
+}
+
+@media (max-width: 560px) {
+  .project-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .profile-facts div,
+  .contact-list a {
+    grid-template-columns: 1fr;
+    gap: 3px;
+  }
+
+  .interaction-prompt {
+    bottom: 12px;
   }
 }
 
