@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://my-portfolio-aicl0ud.vercel.app/sitemap.xml
+Sitemap: https://aicl0ud.dev/sitemap.xml
