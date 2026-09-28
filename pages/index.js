@@ -1,63 +1,25 @@
 import Head from "next/head";
-import { useEffect } from "react";
-import Overworld from "../components/overworld";
-import Maps from "../components/Maps";
-import Keyboard from "../components/Keyboard";
+import dynamic from "next/dynamic";
+
+const PixiStage = dynamic(() => import("../components/game/PixiStage"), {
+  ssr: false,
+});
 
 const Index = () => {
-  useEffect(() => {
-    Maps();
-    const overworld = new Overworld({
-      element: document.querySelector(".game-container"),
-    });
-    overworld.init();
-  }, []);
-
   return (
-    <div className="">
+    <div className="site-shell">
       <Head>
-        <title>Create Next App</title>
+        <title>Kiw — Software Engineer</title>
+        <meta
+          name="description"
+          content="Explore Kiw's work and experience in a tiny pixel-art portfolio."
+        />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className="">
-        <div className="game-container relative">
-          <canvas
-            className="game-canvas bg-[#353540]"
-            width={"320"}
-            height={"180"}
-          ></canvas>
-          <div
-            id="position"
-            className="absolute bottom-0 right-0 mr-1 text-white"
-          ></div>
-
-          <div className="box wooden transition transition-all duration-500">
-            <div className="content">
-              <div
-                className="absolute top-0 right-0 font-bold text-red-600 cursor-pointer"
-                onClick={(e) => {
-                  document.querySelector(".box").classList.add("opacity-0");
-                }}
-              >
-                X
-              </div>
-              <div className="title">Get started</div>
-              <hr className="mt-1 mb-2" />
-              <div className="msg">
-                <div className="flex items-center gap-0.5">
-                  use <Keyboard text={"w,a,s,d"}></Keyboard> or{" "}
-                  <Keyboard text={"↑,↓,→,←"}></Keyboard> to move{" "}
-                </div>
-                <div className="flex items-center gap-0.5">
-                  use <Keyboard text={"z,x"}></Keyboard> or{" "}
-                  <Keyboard word={" ↵ ,spacebar"}></Keyboard> to interact{" "}
-                </div>
-                <div>Then go 3 red marks 🔻 to know me more</div>
-              </div>
-            </div>
-          </div>
-        </div>
+      <main>
+        <h1 className="sr-only">Kiw&apos;s interactive software engineering portfolio</h1>
+        <PixiStage />
       </main>
     </div>
   );
