@@ -21,6 +21,8 @@ npm run dev
 Open [http://localhost:3000](http://localhost:3000).
 
 The in-browser map editor is available at [http://localhost:3000/editor](http://localhost:3000/editor).
+It can paint collision tiles, move story markers, and place furniture from the sprite palette.
+Solid furniture participates in gameplay collision automatically, while rugs remain walkable.
 It edits collision tiles, the player spawn, and story marker positions over the current
 room artwork. Saved layouts apply to the game in the same browser. Use JSON export when
 you want to review or commit a layout as source data.

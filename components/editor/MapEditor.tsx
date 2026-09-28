@@ -1,6 +1,12 @@
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef, useState, type PointerEvent } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+  type PointerEvent,
+} from "react";
 import {
   DEFAULT_MAP_LAYOUT,
   MAP_LAYOUT_KEY,
@@ -12,8 +18,18 @@ import {
   type TilePosition,
 } from "../../data/mapLayout";
 import { PORTFOLIO_STATIONS, type StationId } from "../../data/portfolio";
+import {
+  MAP_SPRITES,
+  SPRITE_ATLAS,
+  getMapSprite,
+  getSpriteTiles,
+  isMapSpriteId,
+  spriteContainsTile,
+  type MapSpriteId,
+  type PlacedMapSprite,
+} from "../../data/mapSprites";
 
-type EditorTool = "wall" | "erase" | "spawn" | StationId;
+type EditorTool = "wall" | "erase" | "spawn" | "erase-sprite" | StationId | MapSpriteId;
 
 const TOOLS: Array<{ id: EditorTool; label: string; hint: string }> = [
   { id: "wall", label: "Wall", hint: "Paint blocked tiles" },
@@ -27,6 +43,21 @@ const TOOLS: Array<{ id: EditorTool; label: string; hint: string }> = [
 
 function cloneLayout(layout: MapLayout): MapLayout {
   return structuredClone(layout);
+}
+
+function spriteStyle(spriteId: MapSpriteId): CSSProperties {
+  const sprite = getMapSprite(spriteId);
+  return {
+    backgroundImage: `url(${SPRITE_ATLAS})`,
+    backgroundPosition: `${sprite.column * 50}% ${sprite.row * 50}%`,
+    backgroundSize: "300% 300%",
+  };
+}
+
+function nextSpriteId(sprites: PlacedMapSprite[], spriteId: MapSpriteId) {
+  let suffix = sprites.length + 1;
+  while (sprites.some((sprite) => sprite.instanceId === `${spriteId}-${suffix}`)) suffix += 1;
+  return `${spriteId}-${suffix}`;
 }
 
 export default function MapEditor() {
@@ -55,6 +86,9 @@ export default function MapEditor() {
       tileKey(layout.stations[station.id]) === tileKey(tile),
     )?.id;
 
+  const placedSpriteAt = (tile: TilePosition, sprites = layout.sprites) =>
+    sprites.find((sprite) => spriteContainsTile(sprite, tile));
+
   const applyTool = (tile: TilePosition) => {
     setLayout((current) => {
       const next = cloneLayout(current);
@@ -63,7 +97,44 @@ export default function MapEditor() {
         (item) => tileKey(next.stations[item.id]) === key,
       );
 
-      if (tool === "wall") {
+      if (tool === "erase-sprite") {
+        const sprite = placedSpriteAt(tile, next.sprites);
+        if (!sprite) {
+          setStatus("There is no placed sprite on this tile.");
+          return current;
+        }
+        next.sprites = next.sprites.filter((item) => item.instanceId !== sprite.instanceId);
+      } else if (isMapSpriteId(tool)) {
+        const definition = getMapSprite(tool);
+        const placed: PlacedMapSprite = {
+          instanceId: nextSpriteId(next.sprites, tool),
+          spriteId: tool,
+          x: tile.x,
+          y: tile.y,
+        };
+        const spriteTiles = getSpriteTiles(placed);
+        if (!spriteTiles.every((currentTile) => currentTile.x < next.width && currentTile.y < next.height)) {
+          setStatus(`${definition.label} does not fit inside the map from this tile.`);
+          return current;
+        }
+        if (next.sprites.some((sprite) => spriteTiles.some((currentTile) => spriteContainsTile(sprite, currentTile)))) {
+          setStatus("Move or erase the existing sprite before placing another one here.");
+          return current;
+        }
+        if (
+          definition.solid &&
+          spriteTiles.some((currentTile) =>
+            tileKey(currentTile) === tileKey(next.spawn) ||
+            PORTFOLIO_STATIONS.some(
+              (item) => tileKey(next.stations[item.id]) === tileKey(currentTile),
+            ),
+          )
+        ) {
+          setStatus("Solid sprites cannot cover the player spawn or a story marker.");
+          return current;
+        }
+        next.sprites.push(placed);
+      } else if (tool === "wall") {
         if (key === tileKey(next.spawn)) {
           setStatus("Move the player spawn before placing a wall here.");
           return current;
@@ -107,7 +178,10 @@ export default function MapEditor() {
   };
 
   const continuePaint = (tile: TilePosition) => {
-    if (painting.current && (tool === "wall" || tool === "erase")) applyTool(tile);
+    if (
+      painting.current &&
+      (tool === "wall" || tool === "erase" || tool === "erase-sprite")
+    ) applyTool(tile);
   };
 
   const save = () => {
@@ -164,7 +238,7 @@ export default function MapEditor() {
         <div>
           <p className="eyebrow">Developer tool</p>
           <h1>Portfolio map editor</h1>
-          <p>Paint collision tiles and position the player and story markers over the current room art.</p>
+          <p>Paint collision, place furniture sprites, and position the player and story markers.</p>
         </div>
         <Link href="/">← Back to game</Link>
       </header>
@@ -197,6 +271,24 @@ export default function MapEditor() {
                 priority
                 draggable={false}
               />
+              <div className="editor-sprite-layer" aria-hidden="true">
+                {layout.sprites.map((sprite) => {
+                  const definition = getMapSprite(sprite.spriteId);
+                  return (
+                    <span
+                      key={sprite.instanceId}
+                      className="editor-placed-sprite"
+                      style={{
+                        ...spriteStyle(sprite.spriteId),
+                        left: `${(sprite.x / layout.width) * 100}%`,
+                        top: `${(sprite.y / layout.height) * 100}%`,
+                        width: `${(definition.width / layout.width) * 100}%`,
+                        height: `${(definition.height / layout.height) * 100}%`,
+                      }}
+                    />
+                  );
+                })}
+              </div>
               {showUpperLayer ? (
                 <Image
                   className="editor-map-image editor-upper-layer"
@@ -240,7 +332,7 @@ export default function MapEditor() {
 
         <aside className="editor-sidebar">
           <section className="editor-card">
-            <h2>Tools</h2>
+            <h2>Collision & markers</h2>
             <div className="editor-tools">
               {TOOLS.map((item) => (
                 <button
@@ -255,6 +347,45 @@ export default function MapEditor() {
                   }}
                 >
                   {item.label}
+                </button>
+              ))}
+            </div>
+          </section>
+
+          <section className="editor-card editor-sprite-card">
+            <div className="editor-card-heading">
+              <div>
+                <h2>Sprite palette</h2>
+                <p>Place furniture from its top-left tile.</p>
+              </div>
+              <button
+                type="button"
+                className={tool === "erase-sprite" ? "active" : ""}
+                aria-pressed={tool === "erase-sprite"}
+                onClick={() => {
+                  setTool("erase-sprite");
+                  setStatus("Sprite eraser selected. Click any part of an object to remove it.");
+                }}
+              >
+                Erase
+              </button>
+            </div>
+            <div className="editor-sprite-palette">
+              {MAP_SPRITES.map((sprite) => (
+                <button
+                  key={sprite.id}
+                  type="button"
+                  className={tool === sprite.id ? "active" : ""}
+                  aria-pressed={tool === sprite.id}
+                  title={`${sprite.label} · ${sprite.width}×${sprite.height}${sprite.solid ? " · solid" : " · walkable"}`}
+                  onClick={() => {
+                    setTool(sprite.id);
+                    setStatus(`${sprite.label} selected. Place from the object's top-left tile.`);
+                  }}
+                >
+                  <span className="editor-sprite-preview" style={spriteStyle(sprite.id)} />
+                  <span>{sprite.label}</span>
+                  <small>{sprite.width}×{sprite.height} · {sprite.solid ? "solid" : "walkable"}</small>
                 </button>
               ))}
             </div>

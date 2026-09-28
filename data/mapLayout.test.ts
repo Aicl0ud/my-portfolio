@@ -34,4 +34,17 @@ describe("map layout", () => {
 
     expect(loadMapLayout(storage)).toEqual(DEFAULT_MAP_LAYOUT);
   });
+
+  it("keeps legacy layouts compatible by adding an empty sprite layer", () => {
+    const { sprites: _sprites, ...legacyLayout } = DEFAULT_MAP_LAYOUT;
+
+    expect(normalizeMapLayout(legacyLayout)?.sprites).toEqual([]);
+  });
+
+  it("rejects a sprite that extends beyond the map", () => {
+    expect(normalizeMapLayout({
+      ...DEFAULT_MAP_LAYOUT,
+      sprites: [{ instanceId: "bed-1", spriteId: "bed", x: 13, y: 13 }],
+    })).toBeNull();
+  });
 });

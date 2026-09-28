@@ -9,6 +9,12 @@ import {
 } from "pixi.js";
 import { PORTFOLIO_STATIONS, type StationId } from "../../data/portfolio";
 import { DEFAULT_MAP_LAYOUT, type MapLayout } from "../../data/mapLayout";
+import {
+  SPRITE_ATLAS,
+  SPRITE_FRAME_SIZE,
+  getMapSprite,
+  type MapSpriteId,
+} from "../../data/mapSprites";
 import { InputController } from "./InputController";
 import {
   MAP_SIZE,
@@ -27,6 +33,7 @@ const ASSETS = {
   player: "/images/characters/player/mPlayer_[human].png",
   shadow: "/images/characters/shadow.png",
   marker: "/images/objects/red-arrow.png",
+  furniture: SPRITE_ATLAS,
 } as const;
 
 const WALK_DURATION = 145;
@@ -58,6 +65,7 @@ export class PortfolioGame {
   private nearbyStationId: StationId | null = null;
   private reducedMotion = false;
   private readonly frameTextures = new Map<string, Texture>();
+  private readonly furnitureTextures = new Map<MapSpriteId, Texture>();
   private readonly layout: MapLayout;
 
   constructor(
@@ -104,21 +112,45 @@ export class PortfolioGame {
     this.app.canvas.setAttribute("aria-label", "An explorable pixel-art portfolio room");
     this.app.canvas.setAttribute("role", "img");
 
-    const [floorTexture, ceilingTexture, playerSheet, shadowTexture, markerSheet] = await Promise.all([
+    const [floorTexture, ceilingTexture, playerSheet, shadowTexture, markerSheet, furnitureSheet] = await Promise.all([
       Assets.load<Texture>(ASSETS.floor),
       Assets.load<Texture>(ASSETS.ceiling),
       Assets.load<Texture>(ASSETS.player),
       Assets.load<Texture>(ASSETS.shadow),
       Assets.load<Texture>(ASSETS.marker),
+      Assets.load<Texture>(ASSETS.furniture),
     ]);
     if (this.destroyed) return;
 
-    for (const texture of [floorTexture, ceilingTexture, playerSheet, shadowTexture, markerSheet]) {
+    for (const texture of [floorTexture, ceilingTexture, playerSheet, shadowTexture, markerSheet, furnitureSheet]) {
       texture.source.scaleMode = "nearest";
     }
     this.playerSheet = playerSheet;
 
     const floor = new Sprite(floorTexture);
+    this.room.addChild(floor);
+
+    for (const placed of this.layout.sprites) {
+      const definition = getMapSprite(placed.spriteId);
+      let texture = this.furnitureTextures.get(placed.spriteId);
+      if (!texture) {
+        texture = new Texture({
+          source: furnitureSheet.source,
+          frame: new Rectangle(
+            definition.column * SPRITE_FRAME_SIZE,
+            definition.row * SPRITE_FRAME_SIZE,
+            SPRITE_FRAME_SIZE,
+            SPRITE_FRAME_SIZE,
+          ),
+        });
+        this.furnitureTextures.set(placed.spriteId, texture);
+      }
+      const sprite = new Sprite(texture);
+      sprite.position.set(placed.x * TILE_SIZE, placed.y * TILE_SIZE);
+      sprite.width = definition.width * TILE_SIZE;
+      sprite.height = definition.height * TILE_SIZE;
+      this.room.addChild(sprite);
+    }
     const markerTexture = new Texture({
       source: markerSheet.source,
       frame: new Rectangle(0, 0, 32, 32),
@@ -140,7 +172,6 @@ export class PortfolioGame {
     this.player.addChild(shadow, this.playerSprite);
 
     const ceiling = new Sprite(ceilingTexture);
-    this.room.addChildAt(floor, 0);
     this.room.addChild(this.player, ceiling);
     this.app.stage.addChild(this.room);
     this.syncScene();
@@ -173,6 +204,8 @@ export class PortfolioGame {
     document.removeEventListener("visibilitychange", this.handleVisibility);
     this.frameTextures.forEach((texture) => texture.destroy(false));
     this.frameTextures.clear();
+    this.furnitureTextures.forEach((texture) => texture.destroy(false));
+    this.furnitureTextures.clear();
     if (this.initialized) {
       this.app.ticker.remove(this.update);
       this.app.destroy(true, { children: true });
