@@ -14,7 +14,18 @@ const Index = () => {
           name="description"
           content="Explore Kiw's work and experience in a tiny pixel-art portfolio."
         />
+        <link rel="canonical" href="https://my-portfolio-aicl0ud.vercel.app/" />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="Kiw — Software Engineer" />
+        <meta
+          property="og:description"
+          content="Explore Kiw's work and experience in a tiny pixel-art portfolio."
+        />
+        <meta property="og:url" content="https://my-portfolio-aicl0ud.vercel.app/" />
+        <meta name="twitter:card" content="summary" />
+        <meta name="theme-color" content="#0b0d12" />
         <link rel="icon" href="/favicon.ico" />
+        <link rel="manifest" href="/site.webmanifest" />
       </Head>
 
       <main>

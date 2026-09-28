@@ -61,7 +61,7 @@ main {
   --game-scale: 1;
   position: relative;
   width: 100%;
-  height: calc(180px * var(--game-scale));
+  height: calc(192px * var(--game-scale));
   display: grid;
   place-items: center;
 }
@@ -76,8 +76,8 @@ main {
   position: absolute;
   left: 50%;
   top: 50%;
-  width: 320px;
-  height: 180px;
+  width: 256px;
+  height: 192px;
   overflow: hidden;
   border: 1px solid #d9c49a;
   box-shadow:
@@ -90,8 +90,8 @@ main {
 
 .game-viewport canvas {
   display: block;
-  width: 320px;
-  height: 180px;
+  width: 256px;
+  height: 192px;
   image-rendering: pixelated;
 }
 

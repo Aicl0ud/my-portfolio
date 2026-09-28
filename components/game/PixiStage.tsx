@@ -32,7 +32,7 @@ function usePixelScale(host: React.RefObject<HTMLDivElement | null>) {
 
     const update = () => {
       const rawScale = Math.min(
-        Math.max(1, element.clientWidth) / VIEWPORT_WIDTH,
+        Math.max(1, window.innerWidth - 48) / VIEWPORT_WIDTH,
         Math.max(1, window.innerHeight - 48) / VIEWPORT_HEIGHT,
       );
       const scale = rawScale >= 1 ? Math.max(1, Math.floor(rawScale)) : rawScale;

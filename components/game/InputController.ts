@@ -15,10 +15,13 @@ const INTERACTION_KEYS = new Set(["Space", "Enter", "KeyE", "KeyX", "KeyZ"]);
 
 export class InputController {
   private held: Direction[] = [];
+  private queuedDirection: Direction | null = null;
   private interactionQueued = false;
 
   get direction() {
-    return this.held[0] ?? null;
+    const direction = this.held[0] ?? this.queuedDirection;
+    this.queuedDirection = null;
+    return direction;
   }
 
   start() {
@@ -36,7 +39,10 @@ export class InputController {
 
   setDirection(direction: Direction, pressed: boolean) {
     this.held = this.held.filter((item) => item !== direction);
-    if (pressed) this.held.unshift(direction);
+    if (pressed) {
+      this.held.unshift(direction);
+      this.queuedDirection = direction;
+    }
   }
 
   queueInteraction() {
@@ -72,6 +78,7 @@ export class InputController {
 
   private clear = () => {
     this.held = [];
+    this.queuedDirection = null;
     this.interactionQueued = false;
   };
 }

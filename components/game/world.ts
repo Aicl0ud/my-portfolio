@@ -1,6 +1,8 @@
+import { PORTFOLIO_STATIONS, type StationId } from "../../data/portfolio";
+
 export const TILE_SIZE = 16;
-export const VIEWPORT_WIDTH = 320;
-export const VIEWPORT_HEIGHT = 180;
+export const VIEWPORT_WIDTH = 256;
+export const VIEWPORT_HEIGHT = 192;
 export const MAP_SIZE = 224;
 
 export type Direction = "up" | "down" | "left" | "right";
@@ -39,3 +41,16 @@ export const directionVector: Record<Direction, { x: number; y: number }> = {
   left: { x: -1, y: 0 },
   right: { x: 1, y: 0 },
 };
+
+export function canEnterTile(x: number, y: number) {
+  return !WALLS.has(`${x},${y}`);
+}
+
+export function findNearbyStationId(tileX: number, tileY: number): StationId | null {
+  return (
+    PORTFOLIO_STATIONS.find(
+      (station) =>
+        Math.abs(station.tile.x - tileX) + Math.abs(station.tile.y - tileY) === 1,
+    )?.id ?? null
+  );
+}

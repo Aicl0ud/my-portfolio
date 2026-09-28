@@ -1,0 +1,16 @@
+{
+  "name": "Kiw — Software Engineer",
+  "short_name": "Kiw Portfolio",
+  "description": "An explorable pixel-art software engineering portfolio.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0b0d12",
+  "theme_color": "#0b0d12",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "any",
+      "type": "image/x-icon"
+    }
+  ]
+}
