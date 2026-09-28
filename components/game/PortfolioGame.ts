@@ -42,6 +42,7 @@ export class PortfolioGame {
   private readonly app = new Application();
   private readonly room = new Container();
   private readonly player = new Container();
+  private readonly markers: Sprite[] = [];
   private playerSprite: Sprite | null = null;
   private playerSheet: Texture | null = null;
   private x = 2 * TILE_SIZE;
@@ -53,14 +54,27 @@ export class PortfolioGame {
   private initialized = false;
   private paused = false;
   private nearbyStationId: StationId | null = null;
+  private reducedMotion = false;
   private readonly frameTextures = new Map<string, Texture>();
 
   constructor(
     private readonly events: {
       onNearbyChange: (stationId: StationId | null) => void;
       onOpenStation: (stationId: StationId) => void;
+      onTileChange: (tile: { x: number; y: number }) => void;
+      onSound: (sound: "step" | "open") => void;
     },
-  ) {}
+    options?: {
+      initialTile?: { x: number; y: number };
+      reducedMotion?: boolean;
+    },
+  ) {
+    if (options?.initialTile && !WALLS.has(`${options.initialTile.x},${options.initialTile.y}`)) {
+      this.x = options.initialTile.x * TILE_SIZE;
+      this.y = options.initialTile.y * TILE_SIZE;
+    }
+    this.reducedMotion = options?.reducedMotion ?? false;
+  }
 
   async mount(host: HTMLDivElement) {
     await this.app.init({
@@ -104,6 +118,7 @@ export class PortfolioGame {
       const marker = new Sprite(markerTexture);
       marker.position.set(station.tile.x * TILE_SIZE - 8, station.tile.y * TILE_SIZE - 24);
       marker.alpha = 0.9;
+      this.markers.push(marker);
       this.room.addChild(marker);
     }
     const shadow = new Sprite(shadowTexture);
@@ -135,6 +150,10 @@ export class PortfolioGame {
     if (paused) this.input.releaseAll();
   }
 
+  setReducedMotion(reduced: boolean) {
+    this.reducedMotion = reduced;
+  }
+
   destroy() {
     this.destroyed = true;
     this.input.destroy();
@@ -150,13 +169,29 @@ export class PortfolioGame {
 
     if (this.paused) return;
 
+    if (!this.reducedMotion) {
+      const pulse = 0.74 + Math.sin(this.animationElapsed / 220) * 0.2;
+      this.markers.forEach((marker) => { marker.alpha = pulse; });
+    }
+
     if (this.movement) {
       this.movement.elapsed += delta;
-      const progress = Math.min(1, this.movement.elapsed / WALK_DURATION);
+      const progress = Math.min(
+        1,
+        this.movement.elapsed / (this.reducedMotion ? 1 : WALK_DURATION),
+      );
       const offset = directionVector[this.movement.direction];
       this.x = this.movement.fromX + offset.x * TILE_SIZE * progress;
       this.y = this.movement.fromY + offset.y * TILE_SIZE * progress;
-      if (progress === 1) this.movement = null;
+      if (progress === 1) {
+        this.movement = null;
+        const tile = {
+          x: Math.round(this.x / TILE_SIZE),
+          y: Math.round(this.y / TILE_SIZE),
+        };
+        this.events.onTileChange(tile);
+        this.events.onSound("step");
+      }
     } else if (this.input.direction) {
       this.tryMove(this.input.direction);
     }
@@ -167,6 +202,7 @@ export class PortfolioGame {
       this.events.onNearbyChange(nearbyStation);
     }
     if (this.input.consumeInteraction() && nearbyStation) {
+      this.events.onSound("open");
       this.events.onOpenStation(nearbyStation);
     }
     this.syncScene();
